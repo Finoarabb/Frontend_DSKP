@@ -3,8 +3,8 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link href="css/login.css" rel="stylesheet">
-    <script type="text/javascript" src="css/login.css"></script>
+    <link href="./css/login.css" rel="stylesheet">
+    <script type="text/javascript" src="./css/login.css"></script>
 
     <title>SISTEM INFORMASI DIGITALISASI ARSIP SURAT</title>
     <style type="text/css"></style>
@@ -14,14 +14,14 @@
     <div class="container">
         <div class="screen">
             <div class="screen__content">
-                <form class="login">
+                <form class="login" action='/login' method="post">
                     <div class="login__field">
                         <i class="login__icon fas fa-user"></i>
-                        <input type="text" class="login__input" placeholder="User name / Email">
+                        <input type="text" class="login__input" name="username" placeholder="User name / Email">
                     </div>
                     <div class="login__field">
                         <i class="login__icon fas fa-lock"></i>
-                        <input type="password" class="login__input" placeholder="Password">
+                        <input type="password" class="login__input" name="password" placeholder="Password" >
                     </div>
                     <button class="button login__submit">
                         <span class="button__text">Log In Now</span>
