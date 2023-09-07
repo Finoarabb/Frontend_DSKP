@@ -1,79 +1,44 @@
-
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <script type="text/javascript" src="js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
 
-        <title>SISTEM INFORMASI DIGITALISASI ARSIP SURAT</title>
-        <style type="text/css">
-            /* Override some defaults */
-            body {
-                padding-top: 150px; 
-                background-image: url('img/bps_gedung.jpg');
-                background-size: 1400px 700px;
-            }
-            .container {
-                width: 300px;
-            }
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="css/login.css" rel="stylesheet">
+    <script type="text/javascript" src="css/login.css"></script>
 
-            /* The white background content wrapper */
-            .container > .content {
-                background-color: #fff;
-                padding: 20px;
-                margin: 0 -20px; 
-                -webkit-border-radius: 10px 10px 10px 10px;
-                -moz-border-radius: 10px 10px 10px 10px;
-                border-radius: 10px 10px 10px 10px;
-                -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-                -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-                box-shadow: 0 1px 2px rgba(0,0,0,.15);
-            }
+    <title>SISTEM INFORMASI DIGITALISASI ARSIP SURAT</title>
+    <style type="text/css"></style>
+</head>
 
-            .login-form {
-                margin-left: 65px;
-            }
-
-            legend {
-                margin-right: -50px;
-                font-weight: bold;
-                color: #404040;
-            }
-
-        </style>
-    </head>
-
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="row">
-                    <div class="login-form">
-                        <h2><img src="img/bps_logo.jpg" class="img-circle" width="65" height="65">&nbsp;&nbsp;LOGIN</h2>
-                        <hr>
-                        <form method="POST" action="cek_login.php">
-                            <div class="control-group">
-                                <div class="controls">
-                                    <div class="input-prepend">
-                                        <span class="add-on"><i class="icon-user"></i></span>
-                                        <input class="span2" placeholder="Nama User" name="user" id="user" type="text">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <div class="input-prepend">
-                                        <span class="add-on"><i class="icon-lock"></i></span>
-                                        <input class="span2" name="pass" id="pass" type="password" placeholder="Password">
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn primary" type="submit">Masuk</button>
-
-                        </form>
+<body>
+    <div class="container">
+        <div class="screen">
+            <div class="screen__content">
+                <form class="login">
+                    <div class="login__field">
+                        <i class="login__icon fas fa-user"></i>
+                        <input type="text" class="login__input" placeholder="User name / Email">
                     </div>
+                    <div class="login__field">
+                        <i class="login__icon fas fa-lock"></i>
+                        <input type="password" class="login__input" placeholder="Password">
+                    </div>
+                    <button class="button login__submit">
+                        <span class="button__text">Log In Now</span>
+                        <i class="button__icon fas fa-chevron-right"></i>
+                    </button>
+                </form>
+                <div class="social-login">
+                    <h3><img class="img-rounded" src="img/logo_bps.png" style="width: 100%;"></h3>
                 </div>
             </div>
+            <div class="screen__background">
+                <span class="screen__background__shape screen__background__shape4"></span>
+                <span class="screen__background__shape screen__background__shape3"></span>
+                <span class="screen__background__shape screen__background__shape2"></span>
+                <span class="screen__background__shape screen__background__shape1"></span>
+            </div>
         </div>
+    </div>
+
 </html>
