@@ -26,7 +26,7 @@ class Auth implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if(empty(cookie('token')) || verify_jwt()===false) 
-        return redirect('login');
+        return view('/');
 
     }
 

@@ -20,14 +20,12 @@ class Login extends BaseController
         $data = [
             'username'=>$this->request->getPost('username'),
             'password'=>$this->request->getPost('password')
-        ] ;
-        try{            
-            $response = $this->client->post(base_url().'login',['form_params'=>$data]);
-            return $response->getBody();
-        } catch(\Exception $e){
-            return $e->getMessage();
-        }
-        
-        // var_dump($respond);exit;
+        ] ; 
+        $response = $this->client->post(base_url().'/login',['form_params'=>$data]);
+        $body = json_decode($response->getBody(),true);
+        if(isset($body['token']))
+        setcookie('token',$body['token']);
+        else session()->setFlashdata('error',$body['messages']);            
+            return $response->redirect('/');
     }
 }
