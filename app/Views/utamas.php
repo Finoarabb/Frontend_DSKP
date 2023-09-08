@@ -17,7 +17,7 @@
     <div class="container">
         <div class="row">
             <div class="span12">
-                <img class="img-rounded" src="img/bps.jpg" style="width: 100%;">
+                <img class="img-rounded" src="img/logo_bps.png" style="width: 100%;">
             </div>
         </div>
         <div class="row">
