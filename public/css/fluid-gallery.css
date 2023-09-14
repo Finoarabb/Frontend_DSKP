@@ -1,0 +1,113 @@
+.filterDiv {
+  display: none;
+}
+
+.show-galeri {
+  display: block;
+}
+
+.image-gallery {
+    opacity: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: .5s ease;
+    backface-visibility: hidden;
+  }
+
+.gallery-out {
+  padding: 7px;
+}
+
+  .text-gallery {
+    bottom: 15px;
+    right: 15px;
+    opacity: 1;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 40px;
+    height: 40px;
+    text-decoration: none;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .text-gallery img {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  
+/* Style the Image Used to Trigger the Modal */
+
+/* The Modal (background) */
+#image-viewer-g {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.9);
+}
+.modal-content-g {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 800px;
+}
+.modal-content-g { 
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+@keyframes zoom {
+  from {transform:scale(0)} 
+  to {transform:scale(1)}
+}
+#image-viewer-g .g-close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 30px;
+  transition: 0.3s;
+}
+
+#image-viewer-g .g-zoom {
+  position: absolute;
+  top: 15px;
+  right: 70px;
+  color: #f1f1f1;
+  font-size: 30px;
+  transition: 0.3s;
+}
+
+#image-viewer-g .g-expand {
+  position: absolute;
+  top: 15px;
+  right: 115px;
+  color: #f1f1f1;
+  font-size: 30px;
+  transition: 0.3s;
+}
+
+#image-viewer-g .g-expand:hover,
+#image-viewer-g .g-zoom:hover,
+#image-viewer-g .g-close:hover{
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 700px){
+  .modal-content-g {
+      width: 100%;
+      padding: 10px 10px;
+  }
+}
