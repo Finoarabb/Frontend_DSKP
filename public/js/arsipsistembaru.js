@@ -114,6 +114,9 @@ $(document).ready(function () {
         $("[id^=tabelsayu]").toggleClass('d-none d-block');
         $(this).toggleClass('d-none d-block');
     });
+    $('.file-act').on('click', function () {
+        window.open('https://docs.google.com/viewerng/viewer?url=https://dpm.stis.ac.id/assets/arsip/dokumen/ADART_Imapolstat_2021-2022.pdf');
+    });
     $('.file-view').on('click', function () {
         window.open('https://docs.google.com/viewerng/viewer?url=https://dpm.stis.ac.id/assets/arsip/dokumen/ADART_Imapolstat_2021-2022.pdf');
     });

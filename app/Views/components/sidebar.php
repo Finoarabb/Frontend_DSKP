@@ -7,7 +7,11 @@
                     <!-- <i class="fas fa-bullhorn"></i> -->
                     <img class="img-profile rounded-circle" width="50px" src="img/logo_bps.png">
                 </div>
+<<<<<<< HEAD
                 <div class="sidebar-brand-text mx-3">DSKP</div>
+=======
+                <div class="sidebar-brand-text mx-3">Nama APP</div>
+>>>>>>> c0d2e3fda2d1d0e8bcc19c9567eafa3943a659a7
             </a>
 
             <!-- Divider -->
@@ -18,7 +22,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                DPM
+                BPS Kabupaten Pasuruan
             </div>
 
             <!-- Nav Item - Dashboard -->
@@ -26,53 +30,31 @@
             <li class="nav-item <?= ($currentURI == 'beranda') ? 'active' : ''; ?>">
                 <a class="nav-link" href="beranda">
                     <i class="fas fa-fw fa-home"></i>
-                    <span>Beranda</span>
+                    <span>Home</span>
                 </a>
             </li>
             <li class="nav-item <?= ($currentURI == 'profil-dpm') ? 'active' : ''; ?>">
                 <a class="nav-link" href="profil-dpm">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Profil DPM</span>
+                    <span>Sent</span>
                 </a>
             </li>
             <li class="nav-item <?= ($currentURI == 'arsip') ? 'active' : ''; ?>">
                 <a class="nav-link" href="arsip">
                     <i class="fas fa-fw fa-folder-open"></i>
-                    <span>Arsip Dokumen</span>
+                    <span>Receive</span>
                 </a>
             </li>
             <li class="nav-item <?= ($currentURI == 'galeri') ? 'active' : ''; ?>">
                 <a class="nav-link" href="galeri">
                     <i class="fas fa-fw fa-image"></i>
-                    <span>Galeri DPM</span>
+                    <span>Draft</span>
                 </a>
             </li>
 
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                User
-            </div>
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item <?= ($currentURI == 'aspirasi') ? 'active' : ''; ?>">
-                <a class="nav-link" href="aspirasi">
-                    <i class="fas fa-fw fa-bullhorn"></i>
-                    <span>Aspirasi</span>
-                </a>
-            </li>
-            <!-- <li class="nav-item">
-                                        <a class="nav-link" href="profile.html">
-                                            <i class="fas fa-fw fa-user-edit"></i>
-                                            <span>Edit Profile</span>
-                                        </a>
-                                    </li> -->
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
