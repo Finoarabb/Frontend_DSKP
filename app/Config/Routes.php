@@ -7,4 +7,5 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->get('login', 'Home::index');
+$routes->get('arsip', 'Home::arsip');
 $routes->post('login','Login::index');

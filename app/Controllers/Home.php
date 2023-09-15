@@ -11,4 +11,12 @@ class Home extends BaseController
         $data = empty($error)?[]:$error; 
         return view('pages/login',$data);
     }
+
+    public function arsip(){
+        $data = [
+            'title' => 'Arsip',
+            'currentURI' => 'arisp'
+        ];
+        return view('pages/arsip',$data);
+    }
 }

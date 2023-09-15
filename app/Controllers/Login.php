@@ -25,6 +25,7 @@ class Login extends BaseController
         $response =curl_exec($request);
         curl_close($request);
         $body = json_decode($response,true);
+        var_dump($body); exit;
         if(isset($body['token']))
         setcookie('token',$body['token']);
         else session()->setFlashdata('error',$body['messages']);            

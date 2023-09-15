@@ -5,9 +5,9 @@
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="beranda">
                 <div class="sidebar-brand-icon">
                     <!-- <i class="fas fa-bullhorn"></i> -->
-                    <img class="img-profile rounded-circle" width="50px" src="img/dpm.png">
+                    <img class="img-profile rounded-circle" width="50px" src="img/logo_bps.png">
                 </div>
-                <div class="sidebar-brand-text mx-3">DPM STIS</div>
+                <div class="sidebar-brand-text mx-3">DSKP</div>
             </a>
 
             <!-- Divider -->
