@@ -14,7 +14,7 @@
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2  d-lg-inline text-gray-600 small">Nama</span>
+                <span class="mr-2  d-lg-inline text-gray-600 small"><?php echo $me; ?></span>
                 <img class="img-profile rounded-circle border" src="img/default.png">
             </a>
             <!-- Dropdown - User Information -->

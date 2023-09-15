@@ -7,11 +7,7 @@
                     <!-- <i class="fas fa-bullhorn"></i> -->
                     <img class="img-profile rounded-circle" width="50px" src="img/logo_bps.png">
                 </div>
-<<<<<<< HEAD
                 <div class="sidebar-brand-text mx-3">DSKP</div>
-=======
-                <div class="sidebar-brand-text mx-3">Nama APP</div>
->>>>>>> c0d2e3fda2d1d0e8bcc19c9567eafa3943a659a7
             </a>
 
             <!-- Divider -->

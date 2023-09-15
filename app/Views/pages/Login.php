@@ -14,7 +14,7 @@
         <div class="screen">
             <div class="screen__content">
                 <!-- <form class="login" action='/login' method="post"> -->
-                <form class="login" action='/utamas' method="post">
+                <form class="login" action='/login' method="post">
                     <div class="login__field">
                         <i class="login__icon fas fa-user"></i>
                         <input type="text" class="login__input" name="username" placeholder="Username">

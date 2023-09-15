@@ -32,8 +32,7 @@ $routes->set404Override();
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
-$routes->get('login', 'Home::index');
+$routes->get('/', 'Login::index');
+$routes->post('login', 'Login::login');
 $routes->get('arsip', 'Home::arsip');
-$routes->post('login','Login::index');
-$routes->post('utamas', 'Home::utamas');
+$routes->get('utamas', 'Home::utamas');
