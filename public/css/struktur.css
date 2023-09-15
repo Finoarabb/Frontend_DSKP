@@ -108,7 +108,7 @@ ul.departments li.department span.struktur {
 
 .director>li.struktur>a.struktur {
     color: #ffffff;
-    background-color: #4E73DF;
+    background-color: #4edf4e;
     width: 30%;
     margin: 0 auto 0px auto;
 }
@@ -576,13 +576,13 @@ font-weight: bold;
 
 .btn-arsip{
     background-color: #CDDAFFCC;
-    color: #4E73DF;
+    color: #77df4e;
     opacity: 80%;
 
 }
 .btn-arsip:hover{
     background-color: #CDDAFFCC;
-    color: #4E73DF;
+    color: #4edf5a;
     opacity: 40%;
 }
 .accordion-profile-dpm .card:first-child,

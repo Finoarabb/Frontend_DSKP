@@ -7,7 +7,7 @@
         <!-- Page Heading -->
         <div class="row align-items-center justify-content-center mb-4">
             <div class="col-sm-auto">
-                <b class="h3 mb-0">Arsip Dokumen</b>
+                <b class="h3 mb-0">Utamas</b>
             </div>
             <div class="col border-top border-primary d-none d-sm-block"></div>
         </div>
@@ -33,15 +33,22 @@
                     <tbody>
                         <tr>
                             <td>
-                                <span>AD/ART Imapolstat 21/22</span>
+                                <span>Surat Keputusan Kepala BPS</span>
                             </td>
-                            <td>2021-12-29 09:59:19</td>
+                            <td>2023-08-29 09:59:19</td>
                             <td>
                                 <div class="d-flex justify-content-center">
                                     <div class="mr-3">
-                                        <button class="btn btn-arsip"><i class="fas fa-eye"></i></button>
+                                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button class="btn btn-act"><i class="fas fa-ellipsis-v"></i></button>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+
+                                            <a class="dropdown-item" href="#home">Aksi 1</a>
+                                            <div class="dropdown-divider"></div>
+                                        </div>
+
                                     </div>
-                                    <button class="btn btn-arsip"><i class="fas fa-download"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -58,7 +65,7 @@
                             <td>2022-03-20 19:26:01</td>
                             <td></td>
                         </tr>
-                        <table id="tabelsayu" class="table d-none">
+                        <!-- <table id="tabelsayu" class="table d-none">
                             <thead>
                                 <tr class="text-dark">
                                     <th scope="col" class="col-lg">Nama</th>
@@ -75,15 +82,15 @@
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <div class="mr-3">
-                                                <button class="btn btn-arsip file-view"><i class="fas fa-eye"></i></button>
+                                                <button class="btn btn-arsip file-act"><i class="fas fa-eye"></i></button>
                                             </div>
                                             <button class="btn btn-arsip file-download"><i class="fas fa-download"></i></button>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr> -->
 
 
-                                <!-- <tr>
+                        <!-- <tr>
                                             <td>
                                                 <span class="folder" id="dropdownMenuLink" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="false"
@@ -247,12 +254,14 @@
                                                 </div>
                                             </td>
                                         </tr> -->
-                            </tbody>
-                        </table>
+                    </tbody>
+                </table>
             </div>
         </div>
 
     </div>
     <!-- /.container-fluid -->
 
+
 </div>
+<?= $this->endSection() ?>
