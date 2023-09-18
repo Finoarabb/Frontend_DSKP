@@ -12,17 +12,29 @@ class Home extends BaseController
         
     }
 
-    public function utamas()    
+    public function surat($tipe = null)    
     {
+
         $me = session()->getFlashdata('me');
         $data = [
             'me'=> '',
-            'title' => 'Utamas',
-            'currentURI' => 'utamas'
+            'title' => 'Surat '.$tipe,
+            'currentURI' => 'srt'.$tipe,
+            'tipe'=>$tipe
         ];
         if(!empty($me))
         $data['me']= $me['role']==='staff'?$me['nama']:$me['role'];
-        return view('pages/utamas', $data);
+        $request = curl_init();
+        $token = $this->request->getCookie('token');
+        curl_setopt($request, CURLOPT_HTTPHEADER,['Authorization: Bearer '.$token]);        
+        curl_setopt($request, CURLOPT_URL, base_url() . 'surat_'.$tipe);
+        curl_setopt($request, CURLOPT_RETURNTRANSFER, TRUE);
+        $response = curl_exec($request);
+        curl_close($request);
+        $body = json_decode($response, true);
+        $data['surat'] = $body; 
+        
+        return view('pages/surat', $data);
     }
     
 

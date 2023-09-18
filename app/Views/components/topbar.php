@@ -19,10 +19,6 @@
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="user">
-                    <i class="fas fa-fw fa-id-badge mr-2 text-gray-400"></i> Profil Saya
-                </a>
-                <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-danger"></i> <span class="text-danger">Keluar</span>
                 </a>

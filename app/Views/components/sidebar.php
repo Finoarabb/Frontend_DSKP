@@ -29,16 +29,16 @@
                     <span>Home</span>
                 </a>
             </li>
-            <li class="nav-item <?= ($currentURI == 'profil-dpm') ? 'active' : ''; ?>">
-                <a class="nav-link" href="profil-dpm">
+            <li class="nav-item <?= ($currentURI == 'srtmasuk') ? 'active' : ''; ?>">
+                <a class="nav-link" href="srtmasuk">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Sent</span>
+                    <span>Surat Masuk</span>
                 </a>
             </li>
-            <li class="nav-item <?= ($currentURI == 'arsip') ? 'active' : ''; ?>">
-                <a class="nav-link" href="arsip">
+            <li class="nav-item <?= ($currentURI == 'srtkeluar') ? 'active' : ''; ?>">
+                <a class="nav-link" href="srtkeluar">
                     <i class="fas fa-fw fa-folder-open"></i>
-                    <span>Receive</span>
+                    <span>Surat Keluar</span>
                 </a>
             </li>
             <li class="nav-item <?= ($currentURI == 'galeri') ? 'active' : ''; ?>">

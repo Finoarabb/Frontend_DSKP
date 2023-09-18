@@ -15,7 +15,7 @@ class Login extends BaseController
 
     public function index()
     {
-        if(is_LoggedIn()) return $this->response->redirect('utamas');                
+        if(is_LoggedIn()) return $this->response->redirect('srtmasuk');                
         $error = session()->getFlashdata('error');                
         return view('pages/login',empty($error)?[]:$error);
     }
@@ -36,6 +36,11 @@ class Login extends BaseController
         if (isset($body['token']))
             setcookie('token', $body['token']);
             else session()->setFlashdata('error', $body['messages']);
+        return $this->response->redirect('/');
+    }
+
+    public function logout() {
+        setcookie('token','',time()-1,'/');
         return $this->response->redirect('/');
     }
 }

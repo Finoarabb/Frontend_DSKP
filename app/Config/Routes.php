@@ -35,4 +35,6 @@ $routes->set404Override();
 $routes->get('/', 'Login::index');
 $routes->post('login', 'Login::login');
 $routes->get('arsip', 'Home::arsip');
-$routes->get('utamas', 'Home::utamas');
+$routes->get('srt(:segment)', 'Home::surat/$1', [], ['segment' => '(masuk|keluar)']);
+$routes->get('surat', 'Home::surat');
+$routes->get('logout', 'Login::logout');
