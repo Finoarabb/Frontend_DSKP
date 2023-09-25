@@ -10,7 +10,7 @@
     <meta name="author" content="">
 
     <title><?= esc($title) ?></title>
-    <link rel="icon" type="image/png" href="img/dpm.png">
+    <link rel="icon" type="image/png" href="img/logo_bps.png">
 
     <!-- Custom fonts for this template-->
     <link href="assets/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -29,7 +29,6 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
     <link href="css/general.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/fluid-gallery.css">
     <!-- Script gallery viewer -->
     <script src="/js/spotlight.bundle.js"></script>
 
@@ -39,8 +38,11 @@
     <link href="assets/datatables/dataTables.bootstrap4.css">
     <link href="assets/datatables/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+
 
     <script src="assets/jquery/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 </head>
 
@@ -90,21 +92,20 @@
                 <div class="modal-body text-justify">Apabila anda yakin untuk logout anda dapat menekan tombol iya, jika anda ingin kembali ke halaman web anda bisa menekan tombol tidak.
                 </div>
                 <div class="modal-footer border-0 justify-content-end">
-                    <a class="btn btn-cancle" href="logout" >Iya</a>
+                    <a class="btn btn-cancle" href="logout">Iya</a>
                     <button class="btn btn-primary" type="button" data-dismiss="modal">Tidak</button>
                 </div>
             </div>
         </div>
     </div>
 
-    
 
-    
+
+
 
     <!-- Bootstrap core JavaScript-->
 
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-
     <!-- Core plugin JavaScript-->
     <script src="assets/jquery-easing/jquery.easing.min.js"></script>
 
@@ -119,7 +120,6 @@
     <script src="js/arsipsistembaru.js"></script>
     <!-- SWEET ALERT -->
     <script src="swal/sweetalert2.all.min.js"></script>
-    <script src="swal/myscript.js"></script>
 
     <!-- PENGUMUMAN ADMIN -->
     <script src="js/tampilpengumumandiadmin.js"></script>
@@ -153,18 +153,6 @@
     </script>
 
     <script>
-        filterSelection("galeri_semua")
-
-        function filterSelection(c) {
-            var x, i;
-            x = document.getElementsByClassName("filterDiv");
-            if (c == "galeri_semua") c = "";
-            for (i = 0; i < x.length; i++) {
-                w3RemoveClass(x[i], "show-galeri");
-                if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "show-galeri");
-            }
-        }
-
         function w3AddClass(element, name) {
             var i, arr1, arr2;
             arr1 = element.className.split(" ");
@@ -189,15 +177,6 @@
         }
 
         // Add active class to the current button (highlight it)
-        var btnContainer = document.getElementById("myBtnContainer");
-        var btns = btnContainer.getElementsByClassName("btn-galeri");
-        for (var i = 0; i < btns.length; i++) {
-            btns[i].addEventListener("click", function() {
-                var current = document.getElementsByClassName("activ");
-                current[0].className = current[0].className.replace(" activ", "");
-                this.className += " activ";
-            });
-        }
     </script>
 </body>
 

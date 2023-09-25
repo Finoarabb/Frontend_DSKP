@@ -34,7 +34,7 @@ class Login extends BaseController
         
         $body = json_decode($response, true);
         if (isset($body['token']))
-            setcookie('token', $body['token']);
+            setcookie('token', $body['token'],time()+3600);
             else session()->setFlashdata('error', $body['messages']);
         return $this->response->redirect('/');
     }

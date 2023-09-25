@@ -96,9 +96,29 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+    $('#tabeluser').DataTable({
+        dom: '<"top"lf>rt<"bottom"ip><"clear">',
+        language: {
+            lengthMenu: 'Tampilkan _MENU_ data',
+            filter: 'Cari: _SEARCH_',
+            info: 'Menampilkan halaman _PAGE_ dari _PAGES_',
+            zeroRecords: "User Tidak Ditemukan",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            },
+            search: "Cari:"
+        }
+    });
+});
+
+
+$(document).ready(function () {
     var bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'September', 'Oktober', "November", 'Desember']
 
-    $('td:nth-child(3)').each(function () {
+    $('#tabelsaya td:nth-child(3)').each(function () {
         a = new Date($(this).html())
         b = bulan[a.getMonth()];
         $(this).html((String(`${a.getDate()} ${b} ${a.getFullYear()}`)));

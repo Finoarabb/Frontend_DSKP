@@ -31,20 +31,20 @@
             </li>
             <li class="nav-item <?= ($currentURI == 'srtmasuk') ? 'active' : ''; ?>">
                 <a class="nav-link" href="srtmasuk">
-                    <i class="fas fa-fw fa-users"></i>
+                    <i class="fas fa-fw fa-envelope"></i>
                     <span>Surat Masuk</span>
                 </a>
             </li>
             <li class="nav-item <?= ($currentURI == 'srtkeluar') ? 'active' : ''; ?>">
                 <a class="nav-link" href="srtkeluar">
-                    <i class="fas fa-fw fa-folder-open"></i>
+                    <i class="fas fa-fw fa-envelope-open"></i>
                     <span>Surat Keluar</span>
                 </a>
             </li>
-            <li class="nav-item <?= ($currentURI == 'galeri') ? 'active' : ''; ?>">
-                <a class="nav-link" href="galeri">
-                    <i class="fas fa-fw fa-image"></i>
-                    <span>Draft</span>
+            <li class="nav-item <?= ($currentURI == 'users') ? 'active' : ''; ?>">
+                <a class="nav-link" href="users">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Users</span>
                 </a>
             </li>
 

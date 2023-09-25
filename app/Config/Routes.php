@@ -34,7 +34,10 @@ $routes->set404Override();
  */
 $routes->get('/', 'Login::index');
 $routes->post('login', 'Login::login');
-$routes->get('arsip', 'Home::arsip');
-$routes->get('srt(:segment)', 'Home::surat/$1', [], ['segment' => '(masuk|keluar)']);
-$routes->get('surat', 'Home::surat');
+$routes->get('srt(:segment)', 'Letter::surat/$1', ['segment' => '(masuk|keluar)']);
+$routes->post('srt(:segment)', 'Letter::newSurat/$1', ['segment' => '(masuk|keluar)']);
+$routes->get('surat', 'Letter::surat');
 $routes->get('logout', 'Login::logout');
+$routes->get('users', 'User::index');
+$routes->post('deleteUser/(:num)', 'User::deleteUser/$1');
+$routes->post('changeRole/(:num)', 'User::changeRole/$1');

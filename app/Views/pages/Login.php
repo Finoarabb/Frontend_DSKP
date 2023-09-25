@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="css/login.css" rel="stylesheet">
-
+    <link rel="icon" type="image/png" href="img/logo_bps.png">
     <title>SISTEM INFORMASI DIGITALISASI ARSIP SURAT</title>
     <style type="text/css"></style>
 </head>

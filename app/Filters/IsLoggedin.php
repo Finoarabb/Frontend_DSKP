@@ -27,7 +27,7 @@ class IsLoggedin implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         helper('jwt');
-        if(!is_LoggedIn()) Services::response()->redirect('/');
+        if(!is_LoggedIn()) return Services::response()->redirect('/');
     }
 
     /**
