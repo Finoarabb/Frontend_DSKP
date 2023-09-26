@@ -40,4 +40,5 @@ $routes->get('surat', 'Letter::surat');
 $routes->get('logout', 'Login::logout');
 $routes->get('users', 'User::index');
 $routes->post('deleteUser/(:num)', 'User::deleteUser/$1');
+$routes->post('user','User::createUser');
 $routes->post('changeRole/(:num)', 'User::changeRole/$1');

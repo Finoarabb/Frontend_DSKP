@@ -46,17 +46,12 @@
                                                 foreach ($rolelist as $role) :
                                                     if ($role === $usr['role']) continue;
                                                 ?>
-                                                    <button class="dropdown-item" onclick="confirmChangeRole(<?= $usr['id'];?>,`<?=$usr['nama'];?>`,`<?=$role?>`)"><?= $role; ?></button>
+                                                    <button class="dropdown-item" onclick="confirmChangeRole(<?= $usr['id']; ?>,`<?= $usr['nama']; ?>`,`<?= $role ?>`)"><?= $role; ?></button>
                                                 <?php endforeach; ?>
                                             </div>
-                                            <button class="btn btn-cancle p-1" onclick="confirmDelete(<?=$usr['id'];?>,`<?=$usr['nama'];?>`)">
+                                            <button class="btn btn-cancle p-1" onclick="confirmDelete(<?= $usr['id']; ?>,`<?= $usr['nama']; ?>`)">
                                                 <span>Delete</span><i class="fas fa-fw fa-trash"></i>
                                             </button>
-                                            <form method="post" class="d-none" hidden id="deleteForm">                                                
-                                            </form>
-                                            <form method="post" class="d-none" hidden id="changeRoleForm">
-                                                <input name="role" id="roleInput" hidden value=""/>                                                
-                                            </form>
                                         </div>
                                     </div>
                                 </td>
@@ -65,6 +60,16 @@
                         ?>
                     </tbody>
                 </table>
+
+                <form method="post" class="d-none" hidden id="deleteForm">
+                </form>
+                <form method="post" class="d-none" hidden id="changeRoleForm">
+                    <input name="role" id="roleInput" hidden value="" />
+                </form>
+                <div class="row justify-content-center">
+                    <button class="btn btn-primary" onclick="tambahUser()">Tambahkan User</button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -75,32 +80,95 @@
 <script>
     function confirmDelete(id, name) {
         Swal.fire({
-            html: 'Anda yakin menghapus user <b>'+name+'</b> ?',
+            html: 'Anda yakin menghapus user <b>' + name + '</b> ?',
             icon: 'warning',
             confirmButtonText: 'Yakin',
-            showCancelButton:true,
+            showCancelButton: true,
             cancelButtonText: 'Tidak'
         }).then((result) => {
             if (result.isConfirmed) {
                 $('#deleteForm').attr('action', 'deleteUser/' + id);
-                $('#deleteForm').submit();                
+                $('#deleteForm').submit();
             }
         })
     }
-    function confirmChangeRole(id, name,role) {
+
+    function confirmChangeRole(id, name, role) {
         Swal.fire({
-            html: 'Anda yakin mengubah user <b>'+name+'</b> menjadi <b>'+role+'</b>?',
+            html: 'Anda yakin mengubah user <b>' + name + '</b> menjadi <b>' + role + '</b>?',
             icon: 'warning',
             confirmButtonText: 'Yakin',
-            showCancelButton:true,
+            showCancelButton: true,
             cancelButtonText: 'Tidak'
         }).then((result) => {
             if (result.isConfirmed) {
                 $('#changeRoleForm').attr('action', 'changeRole/' + id);
-                $('#roleInput').attr('value',role);
-                $('#changeRoleForm').submit();                
+                $('#roleInput').attr('value', role);
+                $('#changeRoleForm').submit();
             }
         })
-    }    
+    }
+
+    function tambahUser() {
+        Swal.fire({
+            title: 'Tambah User Baru',
+            html: `<form id="userForm" action="user" method="post" enctype="application/json">
+                        <div class="form-row">
+                            <div class="col-md-9 mb-3">
+                                <input type="text" class="form-control" name="nama" required placeholder="Nama">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <select class="custom-select" id="role" name="role" required>
+                                    <option value="admin">Admin</option>
+                                    <option value="supervisor">Supervisor</option>
+                                    <option value="pimpinan">Pimpinan</option>
+                                    <option value="staff" selected>Staff</option>
+                                    <option value="operator">Operator</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <input type="password" class="form-control" name="password" placeholder="Password" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="password" class="form-control" name="confirmPassword" placeholder="Password" required>
+                            </div>
+                        </div>
+                    </form>`,
+            showCancelButton: true,
+            confirmButtonText: 'Tambah User',
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#userForm').submit();
+            }
+        })
+    }
+
+    $(document).ready(function() {
+
+        const msg = <?= json_encode($msg); ?>;
+        let html = '';
+        if (msg !== null && msg !== true) {
+            $.each(msg, function(key, value) {
+                html += `<b>${key}</b>: <span>${value}</span><br>`;
+            });
+            Swal.fire({
+                title: 'Gagal Menambahkan User',
+                icon: 'error',
+                html: html
+            });
+        };
+        if (msg === true) Swal.fire({
+            title: 'User berhasil ditambahkan',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500
+        });
+    });
 </script>
 <?php $this->endSection(); ?>

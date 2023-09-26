@@ -15,6 +15,7 @@ class User extends BaseController
             'me' => 'admin',
             'title' => 'Users',
             'currentURI' => 'users',
+            'msg'=>session()->getFlashdata('msg')
         ];
         $token = $this->request->getCookie('token');
         $request = curl_init();
@@ -46,5 +47,24 @@ class User extends BaseController
         $request->setHeader('Authorization', 'Bearer ' . $token);
         $response = $request->put(base_url() . 'user/' . $id, ['json' => ['role'=>$role]]);
         return $this->response->redirect('/users');
+    }
+
+    public function createUser(){
+        $token = $this->request->getCookie('token');
+        $data = [
+            'nama'=>$this->request->getPost('nama'),
+            'role'=>$this->request->getPost('role'),
+            'username'=>$this->request->getPost('username'),
+            'password'=>$this->request->getPost('password'),
+            'confirm_password'=>$this->request->getPost('confirmPassword'),
+        ];
+        $request = Services::curlrequest();
+        $request->setHeader('Authorization', 'Bearer ' . $token);
+        $response = $request->post(base_url() . 'user',['form_params' => $data]);
+        $body=json_decode($response->getBody(),true);
+        if(!empty($body['messages'])) session()->setFlashdata('msg',$body['messages']);
+        elseif(!empty($body['id'])) session()->setFlashdata('msg',true);
+        // var_dump();exit;
+        return $this->response->redirect('users');
     }
 }
