@@ -12,7 +12,7 @@ class User extends BaseController
     {
         $me = session()->getFlashdata('me');
         $data = [
-            'me' => 'admin',
+            'me' => $me,
             'title' => 'Users',
             'currentURI' => 'users',
             'msg'=>session()->getFlashdata('msg')

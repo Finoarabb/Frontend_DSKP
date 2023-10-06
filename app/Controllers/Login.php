@@ -15,7 +15,7 @@ class Login extends BaseController
 
     public function index()
     {
-        if(is_LoggedIn()) return $this->response->redirect('srtmasuk');                
+        if(is_LoggedIn()) return $this->response->redirect('home');                
         $error = session()->getFlashdata('error');                
         return view('pages/login',empty($error)?[]:$error);
     }
@@ -42,5 +42,20 @@ class Login extends BaseController
     public function logout() {
         setcookie('token','',time()-1,'/');
         return $this->response->redirect('/');
+    }
+
+    public function home(){
+        $me = session()->getFlashdata('me');
+        $data = [
+            'me'=> $me,
+            'title' => 'Dashboard',
+            'currentURI' => 'home'       
+        ];
+        $request= Services::curlrequest();
+        $token = $this->request->getCookie('token');
+        $request->setHeader('Authorization','Bearer '.$token);
+        $response = $request->get(base_url().'dashboard');
+        $data['data'] = $response->getBody();
+        return view('pages/home',$data);
     }
 }

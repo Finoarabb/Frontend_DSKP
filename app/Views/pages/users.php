@@ -67,7 +67,7 @@
                     <input name="role" id="roleInput" hidden value="" />
                 </form>
                 <div class="row justify-content-center">
-                    <button class="btn btn-primary" onclick="tambahUser()">Tambahkan User</button>
+                    <button class="btn btn-primary mb-3" onclick="tambahUser()">Tambahkan User</button>
                 </div>
 
             </div>

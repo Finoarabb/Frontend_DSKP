@@ -23,8 +23,8 @@
 
             <!-- Nav Item - Dashboard -->
 
-            <li class="nav-item <?= ($currentURI == 'beranda') ? 'active' : ''; ?>">
-                <a class="nav-link" href="beranda">
+            <li class="nav-item <?= ($currentURI == 'home') ? 'active' : ''; ?>">
+                <a class="nav-link" href="home">
                     <i class="fas fa-fw fa-home"></i>
                     <span>Home</span>
                 </a>
@@ -41,12 +41,14 @@
                     <span>Surat Keluar</span>
                 </a>
             </li>
+            <?php if($me['role']==='admin'):?>
             <li class="nav-item <?= ($currentURI == 'users') ? 'active' : ''; ?>">
                 <a class="nav-link" href="users">
                     <i class="fas fa-fw fa-users"></i>
                     <span>Users</span>
                 </a>
             </li>
+            <?php endif; ?>
 
 
             <!-- Divider -->

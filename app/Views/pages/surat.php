@@ -32,34 +32,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($surat as $srt) : ?>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <?= $srt['no_surat']; ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <?= $srt[$tipe === 'masuk' ? 'asal' : 'tujuan']; ?>
-                                    </div>
-                                </td>
-                                <td><?= $srt['tanggal']; ?></td>
-                                <td>
-                                    <div class="d-flex justify-content-center">
-                                        <div class="mr-3">
-                                            <a class="nav-link dropdown-toggle p-0" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <button class="btn btn-act py-0"><i class="fas fa-ellipsis-v"></i></button>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                                <a class="dropdown-item" href="#home">RIncian</a>
-                                            </div>
+                        <?php if (is_array($surat)) :
+                            foreach ($surat as $srt) : ?>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <?= $srt['no_surat']; ?>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <?= $srt[$tipe === 'masuk' ? 'asal' : 'tujuan']; ?>
+                                        </div>
+                                    </td>
+                                    <td><?= $srt['created_at']; ?></td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <a class="btn btn-primary" href="viewSurat/<?= $srt['id']; ?>">Preview<i class="fas fa-fw fa-eye ml-2"></i></a>
+                                            <?php if ($tipe === 'masuk') : ?>
+                                                <?php if ($me['role'] === 'supervisor') : ?>
+                                                    <?php if ($srt['approval'] == 1) : ?>
+                                                        <button class="btn btn-success ml-2" disabled>Approved</button>
+                                                    <?php else : ?>
+                                                        <button class="btn btn-info ml-2" id="approval" onclick="Approval(<?= $srt['id'] ?>)">Approve <i class="fas fa-fw fa-check"></i></button>
+                                                    <?php endif; ?>
+
+
+                                                <?php elseif ($me['role'] === 'pimpinan') : ?>
+                                                    <button class="btn btn-info ml-2" id="disposeId" onclick="Dispose(<?= $srt['id'] ?>)">Disposisi <i class="fas fa-fw fa-check"></i></button>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
                         <?php endforeach;
-                        ?>
+                        endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -67,7 +74,7 @@
     </div>
 
 </div>
-<div class="row justify-content-center">
+<div class="row justify-content-center mb-3">
     <button class="btn btn-primary" data-toggle="modal" data-target="#newSurat">
         <span>
             Tambahkan Surat
@@ -75,6 +82,10 @@
         </span>
     </button>
 </div>
+
+<form class="d-none" id="agreementForm" method="post" enctype="application/json">
+    <input type="text" hidden name="approveId" id="approveId" value="" />
+</form>
 <!-- Modal -->
 <div class="modal fade" id="newSurat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -123,8 +134,11 @@
         </div>
     </div>
 </div>
+
+
 <script>
     $(document).ready(function() {
+
         $('.datepicker').datepicker({
             format: 'dd/mm/yyyy',
             autoclose: true
@@ -198,9 +212,6 @@
             });
         });
 
-
-
-
         const msg = <?= json_encode($msg); ?>;
         let html = '';
         if (msg !== null && msg !== true) {
@@ -219,6 +230,76 @@
             showConfirmButton: false,
             timer: 1500
         });
+        const disposed = <?= json_encode($disposed); ?>;
+        if (disposed !== '' && disposed !==null) {            
+            Swal.fire({
+                title: disposed,
+                icon: 'error',                
+            });
+        };
+        if (disposed === '') Swal.fire({
+            title: 'Disposisi berhasil ditambahkan',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500
+        });
+
     });
+
+    <?php if ($me['role'] === 'supervisor') : ?>
+    function Approval(id) {
+        Swal.fire({
+            title: 'Apakah Anda Yakin ?',
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Tidak',
+            confirmButtonText: 'Iya'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#agreementForm').attr('action', 'approveLetter');
+                $('#approveId').attr('value', id);
+                $('#agreementForm').submit();
+            }
+        });
+    };
+    <?php endif;?>
+
+    <?php if ($me['role'] === 'pimpinan') : ?>
+        const user = JSON.parse(<?= json_encode($user); ?>);
+
+        function Dispose(id) {
+            const selectOptions = user.map(u => `<option value="${u.id}">${u.nama}</option>`).join('');
+
+            Swal.fire({
+                title: 'Disposisikan Surat Kepada :',
+                icon: 'warning',
+                html: `<form action="disposeLetter" method="post" id="disposeForm">
+                        <input value="${id}" name="sid" hidden>
+                        <textarea name="pesan" class="form-control w-100 mb-2 " placeholder="Pesan"></textarea>
+                        <select class="form-control" multiple name="disposalTarget[]" id="disposalTarget">${selectOptions}</select>
+                        </form>`,
+                showCancelButton: true,
+                cancelButtonText: 'Tidak',
+                confirmButtonText: 'Iya'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log($('#disposalTarget').val());
+                    if (!$('#disposalTarget').val().length || $('textarea').val() == '')
+                        {Swal.fire({
+                            title: 'Field harus terisi',
+                            icon: 'error'
+                        })} else $('#disposeForm').submit();
+                }
+            })
+            var dp = new SlimSelect({
+                select: '#disposalTarget',
+                settings: {
+                    allowDeselect: true,
+                    hideSelected: true,
+
+                }
+            })
+        };
+    <?php endif; ?>
 </script>
 <?php $this->endSection(); ?>

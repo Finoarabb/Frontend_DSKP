@@ -68,9 +68,9 @@ $(document).ready(function () {
     $('#tabelsaya').DataTable({
         dom: '<"top"lf>rt<"bottom"ip><"clear">',
         language: {
-            lengthMenu: 'Tampilkan _MENU_ data',
+            lengthMenu: 'Tampilkan _MENU_ surat',
             filter: 'Cari: _SEARCH_',
-            info: 'Menampilkan halaman _PAGE_ dari _PAGES_',
+            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ surat",
             zeroRecords: "Surat Belum Tersedia",
             paginate: {
                 first: "Pertama",
@@ -99,9 +99,9 @@ $(document).ready(function () {
     $('#tabeluser').DataTable({
         dom: '<"top"lf>rt<"bottom"ip><"clear">',
         language: {
-            lengthMenu: 'Tampilkan _MENU_ data',
+            lengthMenu: 'Tampilkan _MENU_ user',
             filter: 'Cari: _SEARCH_',
-            info: 'Menampilkan halaman _PAGE_ dari _PAGES_',
+            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ user",
             zeroRecords: "User Tidak Ditemukan",
             paginate: {
                 first: "Pertama",
@@ -116,7 +116,7 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
-    var bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'September', 'Oktober', "November", 'Desember']
+    var bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli','Agustus', 'September', 'Oktober', "November", 'Desember']
 
     $('#tabelsaya td:nth-child(3)').each(function () {
         a = new Date($(this).html())
