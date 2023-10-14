@@ -1,0 +1,46 @@
+.dashboard{
+    width: 100%;
+    font-family: "Inter",sans-serif;
+    font-weight: 450;
+    display: inline-flex;
+    justify-content: center;
+    align-items: stretch;
+    --primary:#00a9ffa8;
+    --secondary:#84C318;    
+    --third:#FF6700;
+}
+
+.dashboard >* {
+    text-align: center;
+    padding: 0 2px 0 5px;    
+    font-size: large;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 10px #888888;    
+}
+
+.dashboard > div >p{
+    margin: 0;
+} 
+.dashboard > div >.nilai{
+    font-size: x-large;
+    border-radius: 15px;
+    padding: 0 9px;
+} 
+
+.utama1{
+    background-color: var(--primary);
+}
+.utama2{
+    background-color: var(--secondary);
+}
+.utama3{
+    background-color: var(--third);
+}
+.filter{
+    background-color: gray;
+    >input{
+        max-width: 150px;
+    }
+}

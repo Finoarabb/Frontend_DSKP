@@ -25,43 +25,96 @@
                 <table id="tabelsaya" class="table font-barlow text-black">
                     <thead>
                         <tr class="text-dark">
-                            <th scope="col" class="text-center">No Surat</th>
-                            <th scope="col" class="text-center"><?= $tipe === 'masuk' ? 'Asal' : 'Tujuan'; ?></th>
-                            <th scope="col" class="text-center">Tanggal</th>
+                            <?php if ($tipe === 'masuk') : ?>
+                                <th scope="col" class="text-center">Tanggal Terima Surat</th>
+                            <?php endif; ?>
+                            <th scope="col" class="text-center"><?= $tipe === 'masuk' ? 'No Surat' : 'Tanggal Surat'; ?></th>
+                            <th scope="col" class="text-center"><?= $tipe === 'masuk' ? 'Asal Surat' : 'No Surat'; ?></th>
+                            <th scope="col" class="text-center"><?= $tipe === 'masuk' ? 'Tanggal Surat' : 'Tujuan Surat' ?></th>
+                            <th scope="col" class="text-center">Perihal Surat</th>
                             <th scope="col" class="text-center">Tindakan</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-center">
                         <?php if (is_array($surat)) :
                             foreach ($surat as $srt) : ?>
                                 <tr>
+                                    <?php if ($tipe === 'masuk') : ?>
+                                        <td class="text-center"><?= $srt['created_at']; ?></td>
+                                    <?php endif; ?>
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <?= $srt['no_surat']; ?>
-                                        </div>
+                                        <?= $tipe === 'masuk' ? $srt['no_surat'] : $srt['tanggal']; ?>
                                     </td>
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <?= $srt[$tipe === 'masuk' ? 'asal' : 'tujuan']; ?>
-                                        </div>
+                                        <?= $tipe === 'masuk' ? $srt['asal'] : $srt['no_surat']; ?>
                                     </td>
-                                    <td><?= $srt['created_at']; ?></td>
+                                    <td class="text-center"><?= $tipe === 'masuk' ? $srt['tanggal'] : $srt['tujuan']; ?></td>
+                                    <td class="text-center"><?= empty($srt['perihal']) ? '-' : $srt['perihal'] ?></td>
                                     <td>
-                                        <div class="d-flex justify-content-center">
-                                            <a class="btn btn-primary" href="viewSurat/<?= $srt['id']; ?>">Preview<i class="fas fa-fw fa-eye ml-2"></i></a>
+                                        <div class="d-flex <?= $tipe === 'masuk' && in_array($me['role'], ['supervisor', 'kepala']) ? 'justify-content-end' : 'justify-content-center' ?>">
                                             <?php if ($tipe === 'masuk') : ?>
                                                 <?php if ($me['role'] === 'supervisor') : ?>
-                                                    <?php if ($srt['approval'] == 1) : ?>
-                                                        <button class="btn btn-success ml-2" disabled>Approved</button>
+                                                    <?php if ($srt['status'] == 1) : ?>
+                                                        <button class="btn btn-secondary btn-danger mr-2 supervisor" data-toggle="1" value="<?= $srt['id'] ?>">Tersimpan</button>
+                                                    <?php elseif ($srt['status'] == 2) : ?>
+                                                        <button class="btn btn-secondary btn-success mr-2 supervisor" data-toggle="2" value="<?= $srt['id'] ?>">Diteruskan</button>
+                                                    <?php elseif ($srt['status'] >= 3) : ?>
+                                                        <button class="btn btn-success mr-2 disabled">Sudah Didisposisikan</button>
                                                     <?php else : ?>
-                                                        <button class="btn btn-info ml-2" id="approval" onclick="Approval(<?= $srt['id'] ?>)">Approve <i class="fas fa-fw fa-check"></i></button>
+                                                        <button class="btn btn-info mr-2" id="approval" onclick="Approval(<?= $srt['id'] ?>)"> <i class="fas fa-fw fa-check"></i></button>
                                                     <?php endif; ?>
 
 
-                                                <?php elseif ($me['role'] === 'pimpinan') : ?>
-                                                    <button class="btn btn-info ml-2" id="disposeId" onclick="Dispose(<?= $srt['id'] ?>)">Disposisi <i class="fas fa-fw fa-check"></i></button>
+                                                <?php elseif ($me['role'] === 'kepala') : ?>
+                                                    <?php if ($srt['status'] == 3) : ?>
+                                                        <button class="btn btn-danger mr-2 btn-secondary kepala" data-toggle="3">Tersimpan</button>
+                                                    <?php elseif ($srt['status'] == 5) : ?>
+                                                        <button class="btn btn-success mr-2 disposeId" data-toggle="5" value="<?= $srt['id'] ?>">
+                                                            Diproses
+                                                            <span>
+                                                                <i class="fas fa-fw fa-check"></i>
+                                                            </span>
+                                                        </button>
+                                                    <?php else : ?>
+                                                        <button class="btn btn-info mr-2 disposeId" value="<?= $srt['id'] ?>" data-toggle="2"> <i class="fas fa-fw fa-check"></i></button>
+                                                    <?php endif; ?>
+
+
                                                 <?php endif; ?>
                                             <?php endif; ?>
+                                            <a class="btn btn-primary" data-toggle="dropdown" id="action-dropdown"><i class="fa fa-fw fa-bars"></i></a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" href="viewSurat/<?= $srt['id']; ?>">Preview</i></a>
+                                                </li>
+                                                <?php if (!empty($srt['lampiran'])) : ?>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?= $srt['lampiran']; ?>">
+                                                            Lampiran
+                                                        </a>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if (($me['role'] === 'staff' || $me['role'] === 'kepala') && $srt['status'] == '5') : ?>
+                                                    <li>
+                                                        <button class="dropdown-item viewDisposisi" value="<?= $srt['id']; ?>" data-toggle="modal" data-target="#dispmodal">
+                                                            Proses
+                                                        </button>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if ($me['role'] === 'operator' || $me['role'] === 'admin') : ?>
+                                                    <li>
+                                                        <button class="dropdown-item edit" value="<?= $srt['id']; ?>" data-toggle="modal" data-target="#newSurat">
+                                                            Edit
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button class="dropdown-item" onclick="confirmDelete(<?= $srt['id']; ?>,`<?= $srt['no_surat']; ?>`)">
+                                                            Hapus
+                                                        </button>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -74,61 +127,89 @@
     </div>
 
 </div>
-<div class="row justify-content-center mb-3">
-    <button class="btn btn-primary" data-toggle="modal" data-target="#newSurat">
-        <span>
-            Tambahkan Surat
-            <i class="fas fa-sm fa-plus ml-2"></i>
-        </span>
-    </button>
-</div>
-
-<form class="d-none" id="agreementForm" method="post" enctype="application/json">
-    <input type="text" hidden name="approveId" id="approveId" value="" />
+<?php if ($me['role'] === 'operator' || $me['role'] === 'admin') : ?>
+    <div class="row justify-content-center mb-3">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#newSurat" id="newbtn">
+            <span>
+                Tambahkan Surat
+                <i class="fas fa-sm fa-plus ml-2"></i>
+            </span>
+        </button>
+    </div>
+<?php endif; ?>
+<form class="d-none" id="agreementForm" action="approveLetter" method="post" enctype="application/json">
+    <input type="text" hidden name="sid" id="sid" value="" />
+    <input type="number" min="1" max="4" hidden name="status" id="status" value="" />
 </form>
+<form method="post" class="d-none" hidden id="deleteForm">
+    <input type="hidden" id="mtipeSurat" name="tipe" />
+</form>
+
 <!-- Modal -->
 <div class="modal fade" id="newSurat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" style="max-width: 700px;">
         <div class="modal-content px-3">
             <div class="modal-header border-0">
-                <h4 class="modal-title text-black font-weight-bold" id="exampleModalLabel">Surat Masuk Baru</h4>
+                <h4 class="modal-title text-black font-weight-bold" id="exampleModalLabel">Surat <?= ucfirst($tipe); ?> Baru</h4>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body text-justify">
                 <form action="srt<?= $tipe ?>" method="post" enctype="multipart/form-data" id="formSurat">
-                    <div class="row">
-                        <div class="col my-auto bg-secondary py-3 rounded" id="dropzone">
-
-                            <input name="file" type="file" class="d-none" id="uploadFile" accept=".pdf, .jpg, .jpeg, .png" />
-                            <div class="row">
-                                <div class="col text-center text-warning">
-                                    <i class="fas fa-4x fa-file-upload" id="file-icon"></i>
-                                    <p id="file-ket">Upload dulu dokumennya.., dalam bentuk pdf/jpg ya</p>
-                                </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 px-0" for="no_surat">Nomor Surat</label>
+                        <div class="col">
+                            <input type="text" name="no_surat" id="no_surat" class="form-control" placeholder="No Surat" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 px-0" for="tipe"><?= $tipe === 'masuk' ? 'Asal' : 'Tujuan' ?></label>
+                        <div class="col">
+                            <input type="text" name="<?= $tipe === 'masuk' ? 'asal' : 'tujuan' ?>" id="tipe" class="form-control" placeholder="<?= $tipe === 'masuk' ? 'asal' : 'tujuan' ?>" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 px-0" for="perihal">Perihal</label>
+                        <div class="col">
+                            <input type="text" name="perihal" id="perihal" class="form-control" placeholder="Perihal" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 px-0" for="lampiran">Lampiran</label>
+                        <div class="col">
+                            <input type="text" name="lampiran" id="lampiran" class="form-control" placeholder="Lampiran" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="input-group col">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="tanggal">Tanggal Surat</label>
+                            </div>
+                            <input type="text" class="form-control bg-transparent" id="tanggal" name="tanggal" value="<?= date('d/m/Y') ?>" placeholder="Tanggal Surat" readonly>
+                            <div class="input-group-append ">
+                                <button class="datepicker input-group-text bg-primary btn btn-primary calender">
+                                    <i class="fa fa-fw fa-calendar text-white"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="col">
-
-                            <div class="form-group">
-                                <label for="no_surat">Nomor Surat</label>
-                                <input type="text" name="no_surat" id="no_surat" class="form-control" placeholder="No Surat" />
+                        <div class="input-group col">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="file">File</label>
                             </div>
-                            <div class="form-group">
-                                <label for="tipe"><?= $tipe === 'masuk' ? 'Asal' : 'Tujuan' ?></label>
-                                <input type="text" class="form-control" id="tipe" name="<?= $tipe === 'masuk' ? 'asal' : 'tujuan' ?>" placeholder="<?= $tipe === 'masuk' ? 'asal' : 'tujuan' ?>" />
-                            </div>
-                            <div class="form-group">
-                                <label for="tanggal">Tanggal Surat</label>
-                                <input type="text" class="form-control datepicker" name="tanggal" value="<?= date('d/m/Y') ?>">
+                            <input name="file" type="file" hidden id="uploadFile" accept=".pdf, .jpg, .jpeg, .png" />
+                            <input name="test" type="text" class="form-control bg-transparent" id="filename" readonly />
+                            <div class="input-group-append">
+                                <button class="input-group-text btn btn-primary bg-primary inputFile">
+                                    <i class="fa fa-fw fa-file text-white"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer border-0 justify-content-end">
-                <button class="btn btn-success" id="formSubmit">Tambahkan</button>
+                <button class="btn btn-success" id="formSubmit">Tambahkan Surat</button>
                 <button class="btn btn-cancle" type="button" data-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -137,65 +218,56 @@
 
 
 <script>
-    $(document).ready(function() {
+    var tipe = '<?= $tipe; ?>';
+    const baseurl = '<?= base_url(); ?>';
+    $('.edit').click(function(e) {
+        e.preventDefault();
+        $('#formSubmit').text('Update Surat');
+        $('#formSurat').attr('action', 'editLetter/' + $(this).val());
+        $('#newSurat .modal-title').text('Edit Surat');
+    })
+    $('#newbtn').click(function() {
+        $('#newSurat .modal-title').text('Surat ' + tipe + ' Baru');
+        $('#formSurat').attr('action', 'srt' + tipe);
+        $('#formSubmit').text("Tambahkan Surat");
+    })
 
+    function confirmDelete(id, no_surat) {
+        Swal.fire({
+            html: 'Anda yakin menghapus Surat <b>' + no_surat + '</b> ?',
+            icon: 'warning',
+            confirmButtonText: 'Yakin',
+            showCancelButton: true,
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#tipeSurat').val(tipe);
+                $('#deleteForm').attr('action', 'deleteLetter/' + id);
+
+                $('#deleteForm').submit();
+            }
+        })
+    }
+
+    $(document).ready(function() {
+        $('.datepicker').click(function(e) {
+            e.preventDefault();
+        })
         $('.datepicker').datepicker({
             format: 'dd/mm/yyyy',
-            autoclose: true
+            autoclose: true,
+
+        }).on('changeDate', function(selected) {
+            $('#tanggal').val(selected.format('dd/mm/yyyy'));
         });
-
-        $('#dropzone').on({
-            dragover: function(e) {
-                e.preventDefault();
-                $(this).css('opacity', 0.6);
-            },
-            dragleave: function() {
-                $(this).css('opacity', 1);
-            },
-            drop: function(e) {
-                e.preventDefault();
-                $(this).css('opacity', 1);
-
-                const files = e.originalEvent.dataTransfer.files;
-                $('#uploadFile')[0].files = files;
-                $('#uploadFile').trigger('change');
-            },
-            click: function() {
-                $('#uploadFile')[0].click();
-            },
-            mouseenter: function() {
-                $(this).css('opacity', 0.6);
-            },
-            mouseleave: function() {
-                $(this).css('opacity', 1);
-            }
-        });
-
-        $('#uploadFile').change(function() {
-            var file = this.files[0];
-            let iconClass = 'fas fa-4x';
-            const icon = $('#file-icon');
-            icon.removeClass().addClass(iconClass);
-            icon.parent().removeClass('text-danger');
-            if (!icon.parent().hasClass('text-warning')) icon.parent().addClass('text-warning');
-            if (typeof file === "undefined") {
-                icon.addClass('fa-file-upload');
-                $('#file-ket').text('Upload dulu dokumennya.., dalam bentuk pdf/jpg ya')
-            } else {
-                $('#file-ket').text(file.name);
-                if (file.type.split('/')[0] === 'image') {
-                    icon.addClass('fa-file-image');
-                } else if (file.type === 'application/pdf') {
-                    icon.addClass('fa-file-pdf');
-                } else {
-                    icon.parent().removeClass('text-warning').addClass('text-danger');
-                    icon.addClass('fa-exclamation-triangle');
-                    $('#file-ket').text('Format File yang digunakan salah mohon upload Kembali');
-                };
-            }
-        });
-
-
+        $('.inputFile').click(function(e) {
+            e.preventDefault();
+            $('#uploadFile').trigger('click');
+        })
+        $('#uploadFile').on('change', function() {
+            a = $(this).val();
+            $('#filename').val(a.split('\\').pop());
+        })
         $('#formSubmit').click(function() {
             $('#formSurat').submit();
         })
@@ -231,10 +303,10 @@
             timer: 1500
         });
         const disposed = <?= json_encode($disposed); ?>;
-        if (disposed !== '' && disposed !==null) {            
+        if (disposed !== '' && disposed !== null) {
             Swal.fire({
                 title: disposed,
-                icon: 'error',                
+                icon: 'error',
             });
         };
         if (disposed === '') Swal.fire({
@@ -244,31 +316,111 @@
             timer: 1500
         });
 
+        $('.supervisor').hover(function() {
+            var jenis = $(this).data('toggle') == '1' ? 'btn-danger' : 'btn-success';
+            $(this).toggleClass(jenis, 'btn-secondary');
+            $(this).html() == 'Batalkan <span> <i class="fa fa-fw fa-times"></i></span>' ?
+                $(this).html($(this).data('toggle') == '1' ? 'Tersimpan' : 'Diteruskan') :
+                $(this).html('Batalkan <span> <i class="fa fa-fw fa-times"></i></span>');
+        }).click(function() {
+            Swal.fire({
+                title: 'Batalkan Aksi?',
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel',
+                confirmButtonText: 'Batalkan'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#agreementForm #sid').val($(this).val());
+                    $('#agreementForm #status').val(0);
+                    $('#agreementForm').submit();
+                }
+            });
+        })
+
+        $('.kepala').hover(function() {
+            $(this).toggleClass('btn-danger', 'btn-secondary');
+            $(this).html() == 'Batalkan <span> <i class="fa fa-fw fa-times"></i></span>' ?
+                $(this).html('Tersimpan') :
+                $(this).html('Batalkan <span> <i class="fa fa-fw fa-times"></i></span>');
+        }).click(function() {
+            Swal.fire({
+                title: 'Batalkan Aksi?',
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel',
+                confirmButtonText: 'Batalkan'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#agreementForm #sid').val($(this).val());
+                    $('#agreementForm #status').val(2);
+                    $('#agreementForm').submit();
+                }
+            });
+        });
+        var disposedLetter;
+        $('.viewDisposisi').click(function() {
+            $.ajax({
+                method: 'GET',
+                url: baseurl + '/disposedLetter/' + $(this).val(),
+                dataType: 'json'
+            }).then((result) => {
+                disp = result;
+                $('#dispmodal').modal('toggle');
+
+            }).catch((error) => {
+                console.log(error);
+            });
+        })
     });
 
     <?php if ($me['role'] === 'supervisor') : ?>
-    function Approval(id) {
-        Swal.fire({
-            title: 'Apakah Anda Yakin ?',
-            icon: 'warning',
-            showCancelButton: true,
-            cancelButtonText: 'Tidak',
-            confirmButtonText: 'Iya'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $('#agreementForm').attr('action', 'approveLetter');
-                $('#approveId').attr('value', id);
-                $('#agreementForm').submit();
-            }
-        });
-    };
-    <?php endif;?>
 
-    <?php if ($me['role'] === 'pimpinan') : ?>
-        const user = JSON.parse(<?= json_encode($user); ?>);
+        function Approval(id) {
+            Swal.fire({
+                title: 'Do something about the letter?',
+                icon: 'warning',
+                showCancelButton: true,
+                showDenyButton: true,
+                denyButtonText: 'Simpan',
+                cancelButtonText: 'Cancel',
+                confirmButtonText: 'Teruskan'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#agreementForm #sid').val(id);
+                    $('#agreementForm #status').val(2);
+                    $('#agreementForm').submit();
+                } else if (result.isDenied) {
+                    $('#agreementForm #sid').val(id);
+                    $('#agreementForm #status').val(1);
+                    $('#agreementForm').submit();
+                }
+            });
+        };
+    <?php endif; ?>
 
-        function Dispose(id) {
-            const selectOptions = user.map(u => `<option value="${u.id}">${u.nama}</option>`).join('');
+    <?php if ($me['role'] === 'kepala') : ?>
+
+        $('.disposeId').click(async function Dispose() {
+            var user = '';
+            var id = $(this).val();
+            var disposed = $(this).attr('data-toggle') == '5'
+            console.log($(this));
+            await $.ajax({
+                method: 'GET',
+                url: '<?= base_url() ?>/disposableUser/' + id,
+                async: false,
+                headers: {
+                    'Authorization': 'Bearer <?= $token; ?>'
+                },
+                dataType: 'json'
+            }).then((result) => {
+                user = result;
+            }).catch((e) => {
+                console.log(e);
+            });
+
+            const selectOptions = user.map(u => '<option value="' + u.id + '">' + u.nama + '</option>').join(' ')
 
             Swal.fire({
                 title: 'Disposisikan Surat Kepada :',
@@ -276,19 +428,32 @@
                 html: `<form action="disposeLetter" method="post" id="disposeForm">
                         <input value="${id}" name="sid" hidden>
                         <textarea name="pesan" class="form-control w-100 mb-2 " placeholder="Pesan"></textarea>
-                        <select class="form-control" multiple name="disposalTarget[]" id="disposalTarget">${selectOptions}</select>
+                        <select class="form-control" ref="selectAll" multiple name="disposalTarget[]" id="disposalTarget">
+                        <optgroup data-selectall="true" data-selectalltext="Disposisi ke semua staff">
+                        ${selectOptions}
+                        </optgroup>
+                        </select>                        
                         </form>`,
                 showCancelButton: true,
+                showDenyButton: true,
+                denyButtonText: disposed ? 'Batalkan' : 'Simpan',
                 cancelButtonText: 'Tidak',
-                confirmButtonText: 'Iya'
+                confirmButtonText: 'Disposisikan'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log($('#disposalTarget').val());
-                    if (!$('#disposalTarget').val().length || $('textarea').val() == '')
-                        {Swal.fire({
+                    if (!$('#disposalTarget').val().length || $('textarea').val() == '') {
+                        Swal.fire({
                             title: 'Field harus terisi',
                             icon: 'error'
-                        })} else $('#disposeForm').submit();
+                        })
+                    } else $('#disposeForm').submit();
+                }
+                if (result.isDenied) {
+                    $('#agreementForm #sid').val(id);
+                    $('#agreementForm #status').val(3);
+                    if (disposed)
+                        $('#agreementForm #status').val(2);
+                    $('#agreementForm').submit();
                 }
             })
             var dp = new SlimSelect({
@@ -296,10 +461,10 @@
                 settings: {
                     allowDeselect: true,
                     hideSelected: true,
-
+                    placeholderText: 'Tujuan Disposisi',
                 }
             })
-        };
+        });
     <?php endif; ?>
 </script>
 <?php $this->endSection(); ?>

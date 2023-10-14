@@ -1,126 +1,180 @@
-// $(function () {
-//     var base_url = $('.base_url').data('baseurl');
-//     $('.folder').dblclick(function () {
-//         const link = $(this).data('link');
-//         location.href = base_url + 'dpm/arsipdokumen/' + link;
-//     });
-//     $('.dokumen_file').dblclick(function () {
-//         const file = $(this).data('file');
-//         window.open('https://docs.google.com/viewerng/viewer?url=' + base_url + 'assets/arsip/dokumen/' + file, '_blank');
-//     });
-//     // $('.folder').bind("contextmenu",function(e){
-//     //     $('.klikkanan').show();
-//     // });
-//     // $('html').on('click', function(){
-//     //     $('.klikkanan').hide();
-//     // });
-
-//     $('.rename-folder').on('click', function () {
-//         const id = $(this).data('id');
-
-//         $('#buatfolder').html('Rename Folder');
-//         $('.modal-footer button[type=submit]').html('Rename');
-//         $('.modal-body form').attr('action', base_url + 'admin/renamefolder/' + id);
-
-//         $.ajax({
-//             url: base_url + 'admin/getrenamefolder',
-//             data: { id: id },
-//             method: 'post',
-//             dataType: 'json',
-//             success: function (data) {
-//                 $('#folder').val(data.name);
-//             }
-//         });
-//     });
-
-
-//     $('.rename-file').on('click', function () {
-//         const id = $(this).data('id');
-
-//         $('#buatfolder').html('Rename File');
-//         $('.modal-footer button[type=submit]').html('Rename');
-//         $('.modal-body form').attr('action', base_url + 'admin/renamefile/' + id);
-
-//         $.ajax({
-//             url: base_url + 'admin/getrenamefile',
-//             data: { id: id },
-//             method: 'post',
-//             dataType: 'json',
-//             success: function (data) {
-//                 $('#folder').val(data.name);
-//             }
-//         });
-//     });
-
-//     $('#add_folder').on('click', function () {
-
-//         $('#buatfolder').html('Buat Folder Baru');
-//         $('.modal-footer button[type=submit]').html('Submit');
-//         $('.modal-body form').attr('action', base_url + 'dpm/createfolder');
-
-//         $('#folder').val('');
-//     });
-
-
-// });
-
+//
+var tabelsurat;
 $(document).ready(function () {
-    $('#tabelsaya').DataTable({
-        dom: '<"top"lf>rt<"bottom"ip><"clear">',
-        language: {
-            lengthMenu: 'Tampilkan _MENU_ surat',
-            filter: 'Cari: _SEARCH_',
-            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ surat",
-            zeroRecords: "Surat Belum Tersedia",
-            paginate: {
-                first: "Pertama",
-                last: "Terakhir",
-                next: "Selanjutnya",
-                previous: "Sebelumnya"
-            },
-            search: "Cari:"
+    
+  tabelsurat = $("#tabelsaya").DataTable({
+    columnDefs:[{
+        targets:0,
+        render: function(data,type){
+            if(type==='display'){
+                var date = new Date(data);
+                    var options = { year: 'numeric', month: 'short', day: 'numeric' };
+                    return date.toLocaleDateString('id-ID', options);
+            }
+            return data;
         }
-    });
-    
-    
-    
-    // $('.file-act').on('click', function () {
-    //     window.open('https://docs.google.com/viewerng/viewer?url=https://dpm.stis.ac.id/assets/arsip/dokumen/ADART_Imapolstat_2021-2022.pdf');
-    // });
-    // $('.file-view').on('click', function () {
-    //     window.open('https://docs.google.com/viewerng/viewer?url=https://dpm.stis.ac.id/assets/arsip/dokumen/ADART_Imapolstat_2021-2022.pdf');
-    // });
-    // $('.file-download').on('click', function () {
-    //     window.open('https://dpm.stis.ac.id/dpm/downloadarsip/ADART_Imapolstat_2021-2022.pdf');
-    // });
+    },{
+        targets:3,
+        render: function(data,type){
+            if(type==='display' && tipe==='masuk'){
+                var date = new Date(data);
+                    var options = { year: 'numeric', month: 'short', day: 'numeric' };
+                    return date.toLocaleDateString('id-ID', options);
+            }
+            return data;
+        }
+    }],
+    dom: '<"top"f>rt<"bottom"ip><"clear">',
+    language: {
+      filter: "Cari: _SEARCH_",
+      info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ surat",
+      zeroRecords: "Surat Belum Tersedia",
+      paginate: {
+        first: "Pertama",
+        last: "Terakhir",
+        next: "Selanjutnya",
+        previous: "Sebelumnya",
+      },
+      search: "Cari:",
+    },
+  });
 });
 
 $(document).ready(function () {
-    $('#tabeluser').DataTable({
-        dom: '<"top"lf>rt<"bottom"ip><"clear">',
-        language: {
-            lengthMenu: 'Tampilkan _MENU_ user',
-            filter: 'Cari: _SEARCH_',
-            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ user",
-            zeroRecords: "User Tidak Ditemukan",
-            paginate: {
-                first: "Pertama",
-                last: "Terakhir",
-                next: "Selanjutnya",
-                previous: "Sebelumnya"
-            },
-            search: "Cari:"
-        }
-    });
+  $("#tabeluser").DataTable({
+    dom: '<"top"lf>rt<"bottom"ip><"clear">',
+    language: {
+      lengthMenu: "Tampilkan _MENU_ user",
+      filter: "Cari: _SEARCH_",
+      info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ user",
+      zeroRecords: "User Tidak Ditemukan",
+      paginate: {
+        first: "Pertama",
+        last: "Terakhir",
+        next: "Selanjutnya",
+        previous: "Sebelumnya",
+      },
+      search: "Cari:",
+    },
+  });
 });
 
+function filterBulan(tipe, bulan) {
+  $.ajax({
+    url: baseurl + "monthlyLetter",
+    method: "POST",
+    dataType: "json",
+    data: { tipe: tipe, bulan: bulan },
+    success: function (data) {
+      var mappedData = data.map(function (item) {
+        var buttonsHtml =
+          '<div class="d-flex justify-content-center">' +
+          '<a class="btn btn-primary" data-toggle="tooltip" title="Preview" href="viewSurat/' +
+          item.id +
+          '">' +
+          '<i class="fas fa-fw fa-eye"></i>' +
+          "</a>" +
+          '<button class="btn btn-cancle ml-1" data-toggle="tooltip" title="Hapus Surat" onclick="confirmDelete(' +
+          item.id +
+          ",`" +
+          item.no_surat +
+          '`)">' +
+          '<i class="fas fa-fw fa-trash"></i>' +
+          "</button>" +
+          "</div>";
 
+        if (tipe === "masuk") {
+          return [
+            item.created_at,
+            item.no_surat,
+            item.asal,
+            item.tanggal,
+            item.perihal,
+            buttonsHtml,
+          ];
+        } else {
+          return [
+            item.tanggal,
+            item.no_surat,
+            item.tujuan,
+            item.perihal,
+            buttonsHtml,
+          ];
+        }
+      });
+
+      tabelsurat.clear().rows.add(mappedData).draw();
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.error("Error:", textStatus, errorThrown);
+    },
+  });
+}
 $(document).ready(function () {
-    var bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli','Agustus', 'September', 'Oktober', "November", 'Desember']
+  $("#tabelsaya_wrapper .top").addClass("form-inline mb-2");
+  $("#tabelsaya_filter").addClass("ml-auto");
+  $("#tabelsaya_filter input").addClass("form-control p-0 m-0");
+  $("#tabelsaya_wrapper .top").prepend(
+    `<div class="input-group">
+    <label class="input-group-prepend">Bulan :</label>
+    <div class="position-relative">
+    <input class="form-control rounded" type="text" data-type="month" id="monthPicker">
+    <div class="input-group-append position-absolute clear-filter d-none">
+    <span class="input-group-text bg-transparent border-0 ">
+    <i class="fas fa-times fa-sm"></i>
+    </span>
+    </div>
+    </div>
+</div>`
+  );
 
-    $('#tabelsaya td:nth-child(3)').each(function () {
-        a = new Date($(this).html())
-        b = bulan[a.getMonth()];
-        $(this).html((String(`${a.getDate()} ${b} ${a.getFullYear()}`)));
-    })
-})
+  $('#monthPicker').change(function () {
+    if($(this).val()!='') $('.clear-filter').removeClass('d-none')
+    else $('.clear-filter').addClass('d-none');
+  });
+  $(".clear-filter").click(function () {
+    $("#monthPicker").val("");
+    filterBulan(tipe,'')
+    $("#monthPicker").trigger('change');
+  });
+  var months = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+  $("#monthPicker").monthpicker({
+    target: "#monthPicker",
+    dateFormat: "MM/yy", // Use four "m"s for full month name
+    monthNames: months,
+    changeYear:true,
+    monthNamesShort: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mei",
+      "Jun",
+      "Jul",
+      "Agt",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des",
+    ],
+    onSelect: function (month) {
+      let temp = month.split("/");
+      let bulan = String(months.indexOf(temp[0]) + 1 + "/" + temp[1]);
+      $('#monthPicker').trigger('change')
+      filterBulan(tipe, bulan);
+    },
+  });
+});

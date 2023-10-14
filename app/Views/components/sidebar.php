@@ -2,7 +2,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="beranda">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home">
                 <div class="sidebar-brand-icon">
                     <!-- <i class="fas fa-bullhorn"></i> -->
                     <img class="img-profile rounded-circle" width="50px" src="img/logo_bps.png">
@@ -35,12 +35,14 @@
                     <span>Surat Masuk</span>
                 </a>
             </li>
+            <?php if($me['role']!=='staff'):?>
             <li class="nav-item <?= ($currentURI == 'srtkeluar') ? 'active' : ''; ?>">
                 <a class="nav-link" href="srtkeluar">
                     <i class="fas fa-fw fa-envelope-open"></i>
                     <span>Surat Keluar</span>
                 </a>
             </li>
+            <?php endif;?>
             <?php if($me['role']==='admin'):?>
             <li class="nav-item <?= ($currentURI == 'users') ? 'active' : ''; ?>">
                 <a class="nav-link" href="users">
@@ -49,10 +51,18 @@
                 </a>
             </li>
             <?php endif; ?>
-
-
+            
+            
             <!-- Divider -->
             <hr class="sidebar-divider">
+            <?php if(in_array($me['role'],['admin','supervisor','operator'])):?>
+            <li class="nav-item <?= ($currentURI == 'dispLetter') ? 'active' : ''; ?>">
+                <a class="nav-link" href="dispLetter">
+                    <i class="fas fa-fw fa-paper-plane"></i>
+                    <span>Disposisi Masuk</span>
+                </a>
+            </li>
+            <?php endif; ?>
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">

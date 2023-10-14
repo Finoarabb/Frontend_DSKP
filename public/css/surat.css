@@ -1,0 +1,59 @@
+body table td {
+    font-size: 0.8em;
+}
+
+body table td * {
+    font-size: 0.8rem;
+}
+.tindakan>*{
+    font-size: 0.8em;
+}
+
+.clear-filter{
+    top: 0;
+    right: 0;
+    margin-block: 6px;
+    >span>i{
+        color: #4450a896;
+    }
+}
+
+table.dataTable tbody th, table.dataTable tbody td{
+vertical-align: middle !important;
+padding-inline: 0 !important;
+}
+.ui-datepicker-calendar td a{
+    font-size: 1em;
+}
+.ui-datepicker-year{
+    background-color: transparent !important;
+    border: 0;
+    width: fit-content !important;
+    font-size: 0.9em !important;
+}
+.calender{
+    border-radius: 0 0.55em 0.55em 0!important;
+    padding: 6px 12px !important;
+}
+#rincianSurat > table > thead {
+    border-bottom: 3px solid black;
+}
+
+#rincianSurat > table th:nth-child(-n+2),
+#rincianSurat > table td:nth-child(-n+2) {
+    border-right: 1px solid #a4a4a4;
+}
+
+#rincianSurat > table th:first-child,
+#rincianSurat > table td:first-child {
+    width: 1%;
+}
+
+#rincianSurat > table th:nth-child(2),
+#rincianSurat > table td:nth-child(2) {
+    width: 30%;
+}
+#rincianSurat > table td:nth-child(3) {
+    text-align: left;
+}
+

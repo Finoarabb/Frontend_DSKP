@@ -1,5 +1,5 @@
 <!-- Topbar -->
-<nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow">
+<nav class="navbar navbar-expand navbar-light topbar mb-2 static-top">
 
     <!-- Sidebar Toggle (Topbar) -->
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -14,11 +14,14 @@
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2  d-lg-inline text-gray-600 small"><?= $me['role']==='staff'?$me['nama']:$me['role']; ?></span>
+                <span class="mr-2 d-lg-inline text-dark"><?= $me['role']==='staff'?ucwords($me['nama']):ucwords($me['role']); ?></span>
                 <img class="img-profile rounded-circle border" src="img/default.png">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-lock fa-sm fa-fw mr-2 text-primary"></i> <span class="text-primary">Ganti Password</span>
+                </a> -->
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-danger"></i> <span class="text-danger">Keluar</span>
                 </a>

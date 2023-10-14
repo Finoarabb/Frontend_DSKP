@@ -19,18 +19,20 @@
                         <i class="login__icon fas fa-user"></i>
                         <input type="text" class="login__input" name="username" placeholder="Username">
                         <br />
+
                         <?php
-                        if (!empty($username))
-                            echo $username;
-                        // 
+                        if (!empty($username)) {
+                            echo '<p class="invalid-feedback">' . $username . '</p>';
+                        }
                         ?>
+
                     </div>
                     <div class="login__field">
                         <i class="login__icon fas fa-lock"></i>
                         <input type="password" class="login__input" name="password" placeholder="Password">
                         <?php
                         if (!empty($password))
-                            echo $password;
+                            echo '<p class="invalid-feedback">'.$password.'</p>';
                         // 
                         ?>
                     </div>

@@ -3,15 +3,20 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Filters\IsLoggedin;
-use CodeIgniter\HTTP\RequestTrait;
-use CodeIgniter\HTTP\ResponseTrait;
-use Config\Services;
-use Exception;
-use Faker\Provider\Base;
+use App\Models\Disposisi;
+use App\Models\Letter;
+use App\Models\User;
 
 class Login extends BaseController
 {
+
+    protected $user_model;
+    public function __construct()
+    {
+        $this->user_model = new User();
+        
+    } 
+
 
     public function index()
     {
@@ -21,21 +26,44 @@ class Login extends BaseController
     }
 
     public function login(){
-        $request = curl_init();
+
+        $rules = [
+            'username' => 'required',
+            'password' => 'required|min_length[8]',
+        ];
+        $errors=[
+            'username'=>[
+            'required' => 'Username tidak boleh kosong'],
+            'password'=>[
+            'required' => 'Password tidak boleh kosong',
+            'min_length' => 'Password minimal harus terdiri dari {param} karakter']
+        ];
+        if (!$this->validate($rules,$errors))  {
+            session()->setFlashdata('error',$this->validator->getErrors());
+            return $this->response->redirect('/');                                
+        }
         $data = [
             'username' => $this->request->getPost('username'),
             'password' => $this->request->getPost('password')
         ];
-        curl_setopt($request, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($request, CURLOPT_URL, base_url() . 'login');
-        curl_setopt($request, CURLOPT_RETURNTRANSFER, TRUE);
-        $response = curl_exec($request);
-        curl_close($request);
-        
-        $body = json_decode($response, true);
-        if (isset($body['token']))
-            setcookie('token', $body['token'],time()+3600);
-            else session()->setFlashdata('error', $body['messages']);
+        $user = $this->user_model->where('username',$data['username'])->first();
+        if(empty($user)) {
+            session()->setFlashdata('error',['username'=>'Username Tidak Ditemukan']);
+            return $this->response->redirect('/');                                
+        }
+        if($user['password']!==$data['password']){
+            session()->setFlashdata('error',['password'=>'Password Salah']);
+            return $this->response->redirect('/');                                
+        }
+        $payload = array(
+            "uid" => $user['id'],
+            "nama"=>$user['nama'],
+            "username"=>$user['username'],
+            "role"=>$user['role'],
+        );  
+        $token = generate_jwt($payload);
+        if (!empty($token))
+            setcookie('token', $token,time()+3600);
         return $this->response->redirect('/');
     }
 
@@ -46,16 +74,57 @@ class Login extends BaseController
 
     public function home(){
         $me = session()->getFlashdata('me');
+        $surat_model = new Letter();
+        $surat = $surat_model->findAll();
+        $suratMasuk = array_fill(0, 13, 0);
+        $suratKeluar = array_fill(0, 13, 0);
+        foreach ($surat as $srt) {
+            $tgl = strtotime($srt['created_at']);
+            $bulan = date('m', $tgl);
+            $tahun = date('Y', $tgl);
+            $selisihBulan = (date('Y') - $tahun) * 12 + (date('m') - $bulan);
+            $key = $selisihBulan > 11 ? 12 : $selisihBulan;
+    
+            if (empty($srt['asal'])) {
+                $suratKeluar[$key]++;
+            } else {
+                $suratMasuk[$key]++;                
+            }
+        }
+        $dada = [
+            'srtmasuk' => $suratMasuk,
+            'srtkeluar' => $suratKeluar, 
+        ];
         $data = [
             'me'=> $me,
             'title' => 'Dashboard',
-            'currentURI' => 'home'       
+            'currentURI' => 'home',
+            'data'=>json_encode($dada)          
         ];
-        $request= Services::curlrequest();
-        $token = $this->request->getCookie('token');
-        $request->setHeader('Authorization','Bearer '.$token);
-        $response = $request->get(base_url().'dashboard');
-        $data['data'] = $response->getBody();
+        
         return view('pages/home',$data);
     }
-}
+
+    public function dashboard(){
+        $bulan = $this->request->getPost('bulan');
+        $surat_model = new Letter();
+        $srtmasuk = $surat_model
+        ->where('DATE_FORMAT(created_at,"%c/%Y")',$bulan)
+        ->where('tujuan','')
+        ->findAll();
+        $srtkeluar = $surat_model
+        ->where('DATE_FORMAT(created_at,"%c/%Y")',$bulan)
+        ->where('asal','')
+        ->findAll();
+        $propDisposisi = $surat_model
+        ->where('DATE_FORMAT(created_at,"%c/%Y")',$bulan)
+        ->whereIn('status',[1,3,5])
+        ->findAll();              
+        $data = [
+            'srtmasuk'=>count($srtmasuk),
+            'srtkeluar'=>count($srtkeluar),
+            'propDisposisi'=>count($propDisposisi)
+        ];
+            return json_encode($data);
+        }
+    }

@@ -29,6 +29,8 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
     <link href="css/general.css" rel="stylesheet">
+    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="css/surat.css" rel="stylesheet">
     <!-- Script gallery viewer -->
     <script src="/js/spotlight.bundle.js"></script>
 
@@ -39,16 +41,17 @@
     <link href="assets/datatables/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
     <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet"></link>
-    <link href="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/web/pdf_viewer.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/web/pdf_viewer.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <script src="assets/jquery/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
     <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/jquery-ui-monthpicker@1.0.3/jquery.ui.monthpicker.min.js"></script>
 </head>
 
 <body id="page-top">
@@ -70,7 +73,7 @@
 
             </div>
             <!-- End of Main Content -->
-
+            <?php include 'components/dispmodal.php';?>
             <?php include 'components/footer.php'; ?>
 
         </div>

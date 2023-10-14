@@ -3,11 +3,18 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\Disposisi;
+use App\Models\User as ModelsUser;
 use Config\CURLRequest;
 use Config\Services;
 
 class User extends BaseController
 {
+    protected $user_model;
+    public function __construct()
+    {
+        $this->user_model = new ModelsUser();
+    }
     public function index()
     {
         $me = session()->getFlashdata('me');
@@ -17,54 +24,76 @@ class User extends BaseController
             'currentURI' => 'users',
             'msg'=>session()->getFlashdata('msg')
         ];
-        $token = $this->request->getCookie('token');
-        $request = curl_init();
-        curl_setopt($request, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $token]);
-        curl_setopt($request, CURLOPT_URL, base_url() . 'user');
-        curl_setopt($request, CURLOPT_RETURNTRANSFER, TRUE);
-        $response = curl_exec($request);
-        curl_close($request);
-        $body = json_decode($response, true);
-        $data['users'] = $body;
+        $user = $this->user_model->findAll();
+        $data['users'] = $user;
         return view('pages/users', $data);
     }
 
 
     public function deleteUser($id = null)
     {
-        $token = $this->request->getCookie('token');
-        $request = Services::curlrequest();
-        $request->setHeader('Authorization', 'Bearer ' . $token);
-        $response = $request->delete(base_url() . 'user/' . $id);
+        $this->user_model->delete($id);        
         return $this->response->redirect('/users');
     }
 
     public function changeRole($id = null)
     {
         $role = $this->request->getPost('role');
-        $token = $this->request->getCookie('token');
-        $request = Services::curlrequest();
-        $request->setHeader('Authorization', 'Bearer ' . $token);
-        $response = $request->put(base_url() . 'user/' . $id, ['json' => ['role'=>$role]]);
+        $this->user_model->update($id,['role'=>$role]);
         return $this->response->redirect('/users');
     }
 
     public function createUser(){
-        $token = $this->request->getCookie('token');
+        $rules = [
+            'username' => 'required|is_unique[users.username]',
+            'nama' => 'required',
+            'password' => 'required|min_length[8]',
+            'confirm_password' => 'required|matches[password]',
+        ];
+        $errors = [
+            'username' => [
+                'required' => 'Username tidak boleh kosong',
+                'is_unique' => 'Username sudah digunakan',
+            ],
+            'nama' => [
+                'required' => 'Nama tidak boleh kosong'
+            ],
+            'password' => [
+                'required' => 'Password tidak boleh kosong',
+                'min_length' => 'Password minimal harus terdiri dari {param} karakter'
+            ],
+            'confirm_password' => [
+                'required' => 'Silahkan konfirmasi password terlebih dahulu',
+                'matches' => 'Password tidak sama'
+            ]
+        ];
+        if($this->validate($rules,$errors)){
+            session()->setFlashdata('msg',$this->validator->getErrors());
+            return $this->response->redirect('users');
+        }
         $data = [
             'nama'=>$this->request->getPost('nama'),
-            'role'=>$this->request->getPost('role'),
             'username'=>$this->request->getPost('username'),
             'password'=>$this->request->getPost('password'),
             'confirm_password'=>$this->request->getPost('confirmPassword'),
         ];
-        $request = Services::curlrequest();
-        $request->setHeader('Authorization', 'Bearer ' . $token);
-        $response = $request->post(base_url() . 'user',['form_params' => $data]);
-        $body=json_decode($response->getBody(),true);
-        if(!empty($body['messages'])) session()->setFlashdata('msg',$body['messages']);
-        elseif(!empty($body['id'])) session()->setFlashdata('msg',true);
-        // var_dump();exit;
+        $role=$this->request->getPost('role');
+        if(!empty($role)) $data['role']=$role;
+        $response = $this->user_model->insert($data,false);
+        if($response!==false) session()->setFlashdata('msg',true);
         return $this->response->redirect('users');
+    }
+
+    public function disposableUser($id=null){
+        $disp_model = new Disposisi();
+        $disposedUser = $disp_model
+        ->where('sid',$id)
+        ->select('uid')
+        ->findAll();
+        if(!empty($disposedUser))
+        $disposable_user = $this->user_model->whereNotIn('id',array_column($disposedUser, 'uid'))->findAll();        
+        else $disposable_user = $this->user_model->findAll();
+        return json_encode($disposable_user);
+
     }
 }

@@ -26,6 +26,8 @@
                     <thead>
                         <tr class="text-dark">
                             <th scope="col" class="text-center">Nama</th>
+                            <th scope="col" class="text-center">Username</th>
+                            <th scope="col" class="text-center">Password</th>
                             <th scope="col" class="text-center">Role</th>
                             <th scope="col" class="text-center">Tindakan</th>
                         </tr>
@@ -34,22 +36,24 @@
                         <?php foreach ($users as $usr) : ?>
                             <tr>
                                 <td> <?= $usr['nama']; ?> </td>
+                                <td> <?= $usr['username']; ?> </td>
+                                <td><?= $usr['password']; ?></td>
                                 <td><?= $usr['role']; ?></td>
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <div>
-                                            <button class="btn btn-primary dropdown-toggle p-1" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button class="btn btn-primary dropdown-toggle px-1 py-0" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <span>Role</span>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                                <?php $rolelist = ['supervisor', 'pimpinan', 'admin', 'operator', 'staff'];
+                                                <?php $rolelist = ['supervisor', 'kepala', 'admin', 'operator', 'staff'];
                                                 foreach ($rolelist as $role) :
                                                     if ($role === $usr['role']) continue;
                                                 ?>
                                                     <button class="dropdown-item" onclick="confirmChangeRole(<?= $usr['id']; ?>,`<?= $usr['nama']; ?>`,`<?= $role ?>`)"><?= $role; ?></button>
                                                 <?php endforeach; ?>
                                             </div>
-                                            <button class="btn btn-cancle p-1" onclick="confirmDelete(<?= $usr['id']; ?>,`<?= $usr['nama']; ?>`)">
+                                            <button class="btn btn-cancle px-1 py-0" onclick="confirmDelete(<?= $usr['id']; ?>,`<?= $usr['nama']; ?>`)">
                                                 <span>Delete</span><i class="fas fa-fw fa-trash"></i>
                                             </button>
                                         </div>
@@ -67,7 +71,7 @@
                     <input name="role" id="roleInput" hidden value="" />
                 </form>
                 <div class="row justify-content-center">
-                    <button class="btn btn-primary mb-3" onclick="tambahUser()">Tambahkan User</button>
+                    <button class="btn btn-primary mb-3" onclick="tambahUser()">Tambahkan User<i class="fas fa-sm fa-plus ml-2"></i></button>
                 </div>
 
             </div>
@@ -121,7 +125,7 @@
                                 <select class="custom-select" id="role" name="role" required>
                                     <option value="admin">Admin</option>
                                     <option value="supervisor">Supervisor</option>
-                                    <option value="pimpinan">Pimpinan</option>
+                                    <option value="kepala">Pimpinan</option>
                                     <option value="staff" selected>Staff</option>
                                     <option value="operator">Operator</option>
                                 </select>
