@@ -42,7 +42,7 @@
                     </button>
                 </form>
                 <div class="social-login">
-                    <h3><img class="img-rounded" src="img/logo_bps.png" style="width: 100%;"></h3>
+                    <h3 style="margin-block: 1em;"><img class="img-rounded" src="img/logo_bps.png" style="width: 80%;"></h3>
                 </div>
             </div>
             <div class="screen__background">

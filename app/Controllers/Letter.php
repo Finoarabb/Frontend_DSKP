@@ -133,18 +133,20 @@ class Letter extends BaseController
     {
         $surat = $this->letter_model->find($id);
         $data = [];
-        if (!empty($this->request->getPost('no_surat')))
+        if (!empty($this->request->getPost('no_surat')) && $this->request->getPost('no_surat') !== $surat['no_surat'])
             $data['no_surat'] = $this->request->getPost('no_surat');
         $jenis = empty($surat['tujuan']) ? 'asal' : 'tujuan';
-        if (!empty($this->request->getPost($jenis)))
+        if (!empty($this->request->getPost($jenis)) && $this->request->getPost($jenis) !== $surat[$jenis])
             $data[$jenis] = $this->request->getPost($jenis);
-        if (!empty($this->request->getPost('tanggal')))
+        if (!empty($this->request->getPost('tanggal'))) {
             $tanggal = str_replace('/', '-', $this->request->getPost('tanggal'));
-        $data['tanggal'] = date('Y-m-d', strtotime((string)$tanggal));
-        if (!empty($this->request->getPost('perihal')))
+            $data['tanggal'] = date('Y-m-d', strtotime((string)$tanggal));
+        }
+        if (!empty($this->request->getPost('perihal')) && $this->request->getPost('perihal') !== $surat['perihal'])
             $data['perihal'] = $this->request->getPost('perihal');
-        if (!empty($this->request->getPost('lampiran')))
+        if (!empty($this->request->getPost('lampiran')) && $this->request->getPost('lampiran') !== $surat['lampiran'])
             $data['lampiran'] = $this->request->getPost('lampiran');
+
 
         $file = $this->request->getFile('file');
         if (!empty($file->getName())) {
@@ -162,7 +164,10 @@ class Letter extends BaseController
     {
         $sid = $this->request->getPost('sid');
         $status = $this->request->getPost('status');
-        $letter = $this->letter_model->update($sid, ['status' => $status]);
+        $surat = $this->letter_model->find($sid);
+        $letter = $this->letter_model->update($sid, ['status' => intval($status)]);
+        if ($letter && $surat['status'] == 5)
+            $disp = $this->disp_model->where('sid', $sid)->delete();
         return $this->response->redirect('srtmasuk');
     }
 
@@ -172,28 +177,22 @@ class Letter extends BaseController
         $tipe = $this->request->getPost('tipe');
         $surat = $this->letter_model->find($id);
         $filename = $surat['file'];
-        unlink(WRITEPATH . '/uploads/' . $tipe, $filename);
+        $path = WRITEPATH . '/uploads/' . $tipe . '/' . $filename;
+        if (file_exists($path) && is_readable($path))
+            unlink($path);
         $letter = $this->letter_model->delete($id);
         return $this->response->redirect('/srt' . $tipe);
     }
 
     public function disposeLetter()
     {
-
         $data = $this->request->getRawInput();
-
-        $temp = $this->disp_model->whereIn('uid', $data['disposalTarget'])->where('sid', $data['sid'])->findAll();
-        if (!empty($temp)) session()->setFlashdata('disposed', 'Disposisi Sudah dilakukan');
-        // var_dump($body);exit;
-        else {
-            $this->letter_model->update($data['sid'], ['status' => 5]);
-            $tujuan = [];
-            foreach ($data['disposalTarget'] as $item)
-                $tujuan[] = ['uid' => $item, 'sid' => $data['sid'], 'pesan' => $data['pesan']];
-            $result = $this->disp_model->insertBatch($data);
-            $this->disp_model->insertBatch();
-            session()->setFlashdata('disposed', '');
-        }
+        $this->letter_model->update($data['sid'], ['status' => 5]);
+        $tujuan = [];
+        foreach ($data['disposalTarget'] as $item)
+            $tujuan[] = ['uid' => $item, 'sid' => $data['sid'], 'pesan' => $data['pesan']];
+        $result = $this->disp_model->insertBatch($tujuan);
+        session()->setFlashdata('disposed', '');
         return $this->response->redirect('srtmasuk');
     }
 
@@ -241,8 +240,8 @@ class Letter extends BaseController
         $response = $this->disp_model
             ->join('letters', 'disposisi.sid=letters.id')
             ->where('uid', $me['uid'])
-            ->findAll(); 
-            $data['surat']=$response;  
-        return view('pages/disposedSurat',$data);
+            ->findAll();
+        $data['surat'] = $response;
+        return view('pages/disposedSurat', $data);
     }
 }

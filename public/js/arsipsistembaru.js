@@ -1,29 +1,33 @@
 //
 var tabelsurat;
+var fullData;
 $(document).ready(function () {
-    
   tabelsurat = $("#tabelsaya").DataTable({
-    columnDefs:[{
-        targets:0,
-        render: function(data,type){
-            if(type==='display'){
-                var date = new Date(data);
-                    var options = { year: 'numeric', month: 'short', day: 'numeric' };
-                    return date.toLocaleDateString('id-ID', options);
-            }
-            return data;
-        }
-    },{
-        targets:3,
-        render: function(data,type){
-            if(type==='display' && tipe==='masuk'){
-                var date = new Date(data);
-                    var options = { year: 'numeric', month: 'short', day: 'numeric' };
-                    return date.toLocaleDateString('id-ID', options);
-            }
-            return data;
-        }
-    }],
+    order:[[0,'desc']],
+    columnDefs: [
+      {
+        targets: 0,
+        render: function (data, type) {
+          if (type === "display") {
+            var date = new Date(data);
+            var options = { year: "numeric", month: "short", day: "numeric" };
+            return date.toLocaleDateString("id-ID", options);
+          }
+          return data;
+        },
+      },
+      {
+        targets: 3,
+        render: function (data, type) {
+          if (type === "display" && tipe === "masuk") {
+            var date = new Date(data);
+            var options = { year: "numeric", month: "short", day: "numeric" };
+            return date.toLocaleDateString("id-ID", options);
+          }
+          return data;
+        },
+      },
+    ],
     dom: '<"top"f>rt<"bottom"ip><"clear">',
     language: {
       filter: "Cari: _SEARCH_",
@@ -38,6 +42,8 @@ $(document).ready(function () {
       search: "Cari:",
     },
   });
+
+  fullData = tabelsurat.rows().data().toArray();
 });
 
 $(document).ready(function () {
@@ -60,56 +66,23 @@ $(document).ready(function () {
 });
 
 function filterBulan(tipe, bulan) {
-  $.ajax({
-    url: baseurl + "monthlyLetter",
-    method: "POST",
-    dataType: "json",
-    data: { tipe: tipe, bulan: bulan },
-    success: function (data) {
-      var mappedData = data.map(function (item) {
-        var buttonsHtml =
-          '<div class="d-flex justify-content-center">' +
-          '<a class="btn btn-primary" data-toggle="tooltip" title="Preview" href="viewSurat/' +
-          item.id +
-          '">' +
-          '<i class="fas fa-fw fa-eye"></i>' +
-          "</a>" +
-          '<button class="btn btn-cancle ml-1" data-toggle="tooltip" title="Hapus Surat" onclick="confirmDelete(' +
-          item.id +
-          ",`" +
-          item.no_surat +
-          '`)">' +
-          '<i class="fas fa-fw fa-trash"></i>' +
-          "</button>" +
-          "</div>";
-
-        if (tipe === "masuk") {
-          return [
-            item.created_at,
-            item.no_surat,
-            item.asal,
-            item.tanggal,
-            item.perihal,
-            buttonsHtml,
-          ];
-        } else {
-          return [
-            item.tanggal,
-            item.no_surat,
-            item.tujuan,
-            item.perihal,
-            buttonsHtml,
-          ];
-        }
-      });
-
-      tabelsurat.clear().rows.add(mappedData).draw();
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      console.error("Error:", textStatus, errorThrown);
-    },
-  });
+  if(bulan===''){$('table tbody tr').show(); return}
+  // var tr = tabelsurat.rows().nodes();
+  // var filteredData = tabelsurat.rows().nodes().each(function(){
+  //   const date = new Date($(this).children('td').eq(0).text());
+    
+    //   // }
+    // });
+    fullData.map(function(item,index){
+      var date = new Date(item[0]);
+      const formattedDate = `${date.getMonth()+1}/${date.getFullYear()}`
+      if(formattedDate === bulan)
+      $('table tbody tr').eq(index).show()
+      else 
+      $('table tbody tr').eq(index).hide()
+  })
 }
+
 $(document).ready(function () {
   $("#tabelsaya_wrapper .top").addClass("form-inline mb-2");
   $("#tabelsaya_filter").addClass("ml-auto");
@@ -128,14 +101,14 @@ $(document).ready(function () {
 </div>`
   );
 
-  $('#monthPicker').change(function () {
-    if($(this).val()!='') $('.clear-filter').removeClass('d-none')
-    else $('.clear-filter').addClass('d-none');
+  $("#monthPicker").change(function () {
+    if ($(this).val() != "") $(".clear-filter").removeClass("d-none");
+    else $(".clear-filter").addClass("d-none");
   });
   $(".clear-filter").click(function () {
     $("#monthPicker").val("");
-    filterBulan(tipe,'')
-    $("#monthPicker").trigger('change');
+    filterBulan(tipe, "");
+    $("#monthPicker").trigger("change");
   });
   var months = [
     "Januari",
@@ -155,7 +128,7 @@ $(document).ready(function () {
     target: "#monthPicker",
     dateFormat: "MM/yy", // Use four "m"s for full month name
     monthNames: months,
-    changeYear:true,
+    changeYear: true,
     monthNamesShort: [
       "Jan",
       "Feb",
@@ -173,7 +146,7 @@ $(document).ready(function () {
     onSelect: function (month) {
       let temp = month.split("/");
       let bulan = String(months.indexOf(temp[0]) + 1 + "/" + temp[1]);
-      $('#monthPicker').trigger('change')
+      $("#monthPicker").trigger("change");
       filterBulan(tipe, bulan);
     },
   });

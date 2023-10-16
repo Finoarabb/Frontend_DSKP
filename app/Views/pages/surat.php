@@ -35,21 +35,21 @@
                             <th scope="col" class="text-center">Tindakan</th>
                         </tr>
                     </thead>
-                    <tbody class="text-center">
+                    <tbody>
                         <?php if (is_array($surat)) :
                             foreach ($surat as $srt) : ?>
                                 <tr>
                                     <?php if ($tipe === 'masuk') : ?>
                                         <td class="text-center"><?= $srt['created_at']; ?></td>
                                     <?php endif; ?>
-                                    <td>
+                                    <td class="<?= $tipe !== 'masuk' ? 'text-center' : ''; ?>">
                                         <?= $tipe === 'masuk' ? $srt['no_surat'] : $srt['tanggal']; ?>
                                     </td>
                                     <td>
                                         <?= $tipe === 'masuk' ? $srt['asal'] : $srt['no_surat']; ?>
                                     </td>
-                                    <td class="text-center"><?= $tipe === 'masuk' ? $srt['tanggal'] : $srt['tujuan']; ?></td>
-                                    <td class="text-center"><?= empty($srt['perihal']) ? '-' : $srt['perihal'] ?></td>
+                                    <td class="<?= $tipe === 'masuk' ? 'text-center' : ''; ?>"><?= $tipe === 'masuk' ? $srt['tanggal'] : $srt['tujuan']; ?></td>
+                                    <td class="<?= empty($srt['perihal']) ? 'text-center' : '' ?>"><?= empty($srt['perihal']) ? '-' : $srt['perihal'] ?></td>
                                     <td>
                                         <div class="d-flex <?= $tipe === 'masuk' && in_array($me['role'], ['supervisor', 'kepala']) ? 'justify-content-end' : 'justify-content-center' ?>">
                                             <?php if ($tipe === 'masuk') : ?>
@@ -67,7 +67,7 @@
 
                                                 <?php elseif ($me['role'] === 'kepala') : ?>
                                                     <?php if ($srt['status'] == 3) : ?>
-                                                        <button class="btn btn-danger mr-2 btn-secondary kepala" data-toggle="3">Tersimpan</button>
+                                                        <button class="btn btn-danger mr-2 btn-secondary kepala" data-toggle="3" value="<?= $srt['id'] ?>">Tersimpan</button>
                                                     <?php elseif ($srt['status'] == 5) : ?>
                                                         <button class="btn btn-success mr-2 disposeId" data-toggle="5" value="<?= $srt['id'] ?>">
                                                             Diproses
@@ -96,12 +96,12 @@
                                                 <?php endif; ?>
                                                 <?php if (($me['role'] === 'staff' || $me['role'] === 'kepala') && $srt['status'] == '5') : ?>
                                                     <li>
-                                                        <button class="dropdown-item viewDisposisi" value="<?= $srt['id']; ?>" data-toggle="modal" data-target="#dispmodal">
+                                                        <button class="dropdown-item viewDisposisi" value="<?= $srt['id']; ?>">
                                                             Proses
                                                         </button>
                                                     </li>
                                                 <?php endif; ?>
-                                                <?php if ($me['role'] === 'operator' || $me['role'] === 'admin') : ?>
+                                                <?php if (in_array($me['role'], ['admin', 'operator']) && $srt['status'] == 0) : ?>
                                                     <li>
                                                         <button class="dropdown-item edit" value="<?= $srt['id']; ?>" data-toggle="modal" data-target="#newSurat">
                                                             Edit
@@ -142,7 +142,7 @@
     <input type="number" min="1" max="4" hidden name="status" id="status" value="" />
 </form>
 <form method="post" class="d-none" hidden id="deleteForm">
-    <input type="hidden" id="mtipeSurat" name="tipe" />
+    <input type="hidden" id="tipeSurat" name="tipe" />
 </form>
 
 <!-- Modal -->
@@ -219,12 +219,27 @@
 
 <script>
     var tipe = '<?= $tipe; ?>';
-    const baseurl = '<?= base_url(); ?>';
+    baseurl = "<?= base_url() ?>";
+    const surat = <?= json_encode($surat); ?>;
+    var disp;
     $('.edit').click(function(e) {
+        const sid = $(this).val();
+        let srt = []
         e.preventDefault();
         $('#formSubmit').text('Update Surat');
-        $('#formSurat').attr('action', 'editLetter/' + $(this).val());
         $('#newSurat .modal-title').text('Edit Surat');
+        surat.forEach(function(val, i) {
+            if (val['id'] == sid)
+                srt = surat[i]
+        });
+        console.log(srt);
+        $('#tipe').val(srt.tujuan==''?srt.asal:srt.tujuan);
+        $('#no_surat').val(srt.no_surat);
+        $('#lampiran').val(srt.lampiran);
+        $('#perihal').val(srt.perihal);
+        date =  new Date(srt.tanggal)
+        $('#tanggal').val(`${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`)
+        $('#formSurat').attr('action', 'editLetter/' + sid);
     })
     $('#newbtn').click(function() {
         $('#newSurat .modal-title').text('Surat ' + tipe + ' Baru');
@@ -243,12 +258,31 @@
             if (result.isConfirmed) {
                 $('#tipeSurat').val(tipe);
                 $('#deleteForm').attr('action', 'deleteLetter/' + id);
-
                 $('#deleteForm').submit();
             }
         })
     }
 
+    $('.kepala').hover(function() {
+        $(this).toggleClass('btn-danger', 'btn-secondary');
+        $(this).html() == 'Batalkan <span> <i class="fa fa-fw fa-times"></i></span>' ?
+            $(this).html('Tersimpan') :
+            $(this).html('Batalkan <span> <i class="fa fa-fw fa-times"></i></span>');
+    }).click(function() {
+        Swal.fire({
+            title: 'Batalkan Aksi?',
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Batalkan'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#agreementForm #sid').val($(this).val());
+                $('#agreementForm #status').val(2);
+                $('#agreementForm').submit();
+            }
+        });
+    });
     $(document).ready(function() {
         $('.datepicker').click(function(e) {
             e.preventDefault();
@@ -338,27 +372,7 @@
             });
         })
 
-        $('.kepala').hover(function() {
-            $(this).toggleClass('btn-danger', 'btn-secondary');
-            $(this).html() == 'Batalkan <span> <i class="fa fa-fw fa-times"></i></span>' ?
-                $(this).html('Tersimpan') :
-                $(this).html('Batalkan <span> <i class="fa fa-fw fa-times"></i></span>');
-        }).click(function() {
-            Swal.fire({
-                title: 'Batalkan Aksi?',
-                icon: 'warning',
-                showCancelButton: true,
-                cancelButtonText: 'Cancel',
-                confirmButtonText: 'Batalkan'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#agreementForm #sid').val($(this).val());
-                    $('#agreementForm #status').val(2);
-                    $('#agreementForm').submit();
-                }
-            });
-        });
-        var disposedLetter;
+
         $('.viewDisposisi').click(function() {
             $.ajax({
                 method: 'GET',
@@ -378,7 +392,7 @@
 
         function Approval(id) {
             Swal.fire({
-                title: 'Do something about the letter?',
+                title: 'Tindakan',
                 icon: 'warning',
                 showCancelButton: true,
                 showDenyButton: true,
@@ -405,7 +419,6 @@
             var user = '';
             var id = $(this).val();
             var disposed = $(this).attr('data-toggle') == '5'
-            console.log($(this));
             await $.ajax({
                 method: 'GET',
                 url: '<?= base_url() ?>/disposableUser/' + id,

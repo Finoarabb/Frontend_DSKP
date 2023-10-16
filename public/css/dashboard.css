@@ -1,9 +1,9 @@
 .dashboard{
-    width: 100%;
+    width: 50%;
     font-family: "Inter",sans-serif;
     font-weight: 450;
-    display: inline-flex;
-    justify-content: center;
+    display: flex;
+    justify-content: space-evenly;
     align-items: stretch;
     --primary:#00a9ffa8;
     --secondary:#84C318;    
@@ -12,9 +12,11 @@
 
 .dashboard >* {
     text-align: center;
-    padding: 0 2px 0 5px;    
-    font-size: large;
+    padding: 10px;    
+    border-radius: 15px;
+    font-size: medium;
     display: flex;
+    flex-direction: column;
     align-items: center;
     box-sizing: border-box;
     box-shadow: 5px 5px 10px #888888;    
@@ -24,7 +26,8 @@
     margin: 0;
 } 
 .dashboard > div >.nilai{
-    font-size: x-large;
+    font-weight: 600;
+    font-size: xx-large;
     border-radius: 15px;
     padding: 0 9px;
 } 
@@ -39,8 +42,16 @@
     background-color: var(--third);
 }
 .filter{
-    background-color: gray;
+    font-family: "Inter",sans-serif;
+    margin-inline-end: 3em;
+    box-shadow: 5px 5px 10px #888888;   
+    border-radius: 0 15px 15px 0;
+    max-width: 250px;
+    .input-group-text{
+        font-weight: 600;
+        background-color: b09f9f94;
+    }
     >input{
-        max-width: 150px;
+
     }
 }

@@ -47,6 +47,7 @@ $routes->post('deleteUser/(:num)', 'User::deleteUser/$1');
 $routes->post('deleteLetter/(:num)', 'Letter::deleteLetter/$1');
 $routes->post('user','User::createUser');
 $routes->post('changeRole/(:num)', 'User::changeRole/$1');
+$routes->post('changePw/(:num)', 'User::changePw/$1');
 $routes->post('disposeLetter', 'Letter::disposeLetter');
 $routes->get('disposedLetter/(:num)', 'Letter::disposedLetter/$1');
 $routes->get('dispLetter', 'Letter::dispLetter');

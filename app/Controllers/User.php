@@ -42,6 +42,13 @@ class User extends BaseController
         $this->user_model->update($id,['role'=>$role]);
         return $this->response->redirect('/users');
     }
+    
+    public function changePw($id = null)
+    {
+        $password = $this->request->getPost('password');
+        $user =$this->user_model->update($id,['password'=>$password]);
+        return json_encode($user);
+    }
 
     public function createUser(){
         $rules = [
@@ -67,7 +74,7 @@ class User extends BaseController
                 'matches' => 'Password tidak sama'
             ]
         ];
-        if($this->validate($rules,$errors)){
+        if(!$this->validate($rules,$errors)){
             session()->setFlashdata('msg',$this->validator->getErrors());
             return $this->response->redirect('users');
         }
@@ -75,7 +82,6 @@ class User extends BaseController
             'nama'=>$this->request->getPost('nama'),
             'username'=>$this->request->getPost('username'),
             'password'=>$this->request->getPost('password'),
-            'confirm_password'=>$this->request->getPost('confirmPassword'),
         ];
         $role=$this->request->getPost('role');
         if(!empty($role)) $data['role']=$role;

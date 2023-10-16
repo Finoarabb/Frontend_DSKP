@@ -9,27 +9,35 @@
             </div>
             <div class="col border-top border-primary d-none d-sm-block"></div>
         </div>
-        <div class="dashboard">
-
-            <div class="utama1">
-                <p>
-                    Surat Masuk :
-                </p>
-                <span class="nilai" id="smbln"></span>
+        <div class="row justify-content-end">
+            <div class="mb-2">
+                <div class="input-group filter">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"> Bulan</div>
+                    </div>
+                    <input class="form-control" type="text" id="monthPicker" data-type="month">
+                </div>
             </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="dashboard">
+
+                <div class="utama1">
+                    <p>
+                        Surat Masuk
+                    </p>
+                    <span class="nilai" id="smbln"></span>
+                </div>
 
 
-            <div class="utama2">
-                <p>Surat Terdisposisi :</p>
-                <span class="nilai" id="stbln"></span>
-            </div>
-            <div class="utama3">
-                <p>Surat Keluar :</p>
-                <span class="nilai" id="skbln"></span>
-            </div>
-            <div class="filter">
-                <p> Bulan :</p>
-                <input type="text" id="monthPicker" data-type="month">
+                <div class="utama2">
+                    <p>Surat Terdisposisi </p>
+                    <span class="nilai" id="stbln"></span>
+                </div>
+                <div class="utama3">
+                    <p>Surat Keluar </p>
+                    <span class="nilai" id="skbln"></span>
+                </div>
             </div>
         </div>
 
@@ -45,25 +53,27 @@
 </div>
 
 <script>
-function utama(bulan){
+    function utama(bulan) {
 
-    $.ajax({
-        url: '<?=base_url()?>/dashboard', // Replace with the actual URL
-        method: 'POST',
-        dataType: 'json',
-        data: { bulan: bulan },
-        success: function(data) {
-            $('#smbln').text(data.srtmasuk)
-            $('#stbln').text(data.propDisposisi)
-            $('#skbln').text(data.srtkeluar)
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.error('Error:', textStatus, errorThrown);
-        }
-    });
-}
+        $.ajax({
+            url: '<?= base_url() ?>/dashboard', // Replace with the actual URL
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                bulan: bulan
+            },
+            success: function(data) {
+                $('#smbln').text(data.srtmasuk)
+                $('#stbln').text(data.propDisposisi)
+                $('#skbln').text(data.srtkeluar)
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error:', textStatus, errorThrown);
+            }
+        });
+    }
     $(document).ready(() => {
-        
+
         const data = <?= $data; ?>;
         // $('#smbln').text(data.srtmasuk[0]);
         // $('#skbln').text(data.srtkeluar[0]);
@@ -82,21 +92,21 @@ function utama(bulan){
         }
         var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         var formattedDate = months[currentDate.getMonth()] + "/" + currentDate.getFullYear();
-        const monthNames=['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         $('#monthPicker').monthpicker({
             target: '#monthPicker',
             dateFormat: 'MM/yy', // Use four "m"s for full month name
             monthNames: monthNames,
             monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'],
-            onSelect: function(month){
-                let temp =month.split('/')
-                let bulan =String(monthNames.indexOf(temp[0])+1+'/'+temp[1])
+            onSelect: function(month) {
+                let temp = month.split('/')
+                let bulan = String(monthNames.indexOf(temp[0]) + 1 + '/' + temp[1])
                 utama(bulan);
             }
         }).val(formattedDate);
         month = $('#monthPicker').val();
-        let temp =month.split('/')
-        let bulan =String(monthNames.indexOf(temp[0])+1+'/'+temp[1])
+        let temp = month.split('/')
+        let bulan = String(monthNames.indexOf(temp[0]) + 1 + '/' + temp[1])
         utama(bulan);
 
 
@@ -109,7 +119,7 @@ function utama(bulan){
                     blur: 10,
                     opacity: 0.2
                 },
-                height: 450
+                height: 400
             },
             series: [{
                 name: 'Surat Masuk',

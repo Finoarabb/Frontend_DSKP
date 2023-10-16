@@ -67,6 +67,7 @@
 <script>
     var tipe = 'masuk';
     var baseurl = "<?=base_url();?>";
+    var disp;
     $('.viewDisposisi').click(function(){
             $.ajax({
                 method: 'GET',
