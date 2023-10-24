@@ -24,6 +24,7 @@
 
 .dashboard > div >p{
     margin: 0;
+    
 } 
 .dashboard > div >.nilai{
     font-weight: 600;
@@ -33,17 +34,20 @@
 } 
 
 .utama1{
+    width: 200px;
     background-color: var(--primary);
 }
 .utama2{
+    width: 200px;
     background-color: var(--secondary);
 }
 .utama3{
+    width: 200px;
     background-color: var(--third);
 }
 .filter{
     font-family: "Inter",sans-serif;
-    margin-inline-end: 3em;
+    margin-inline-end: 3em; 
     box-shadow: 5px 5px 10px #888888;   
     border-radius: 0 15px 15px 0;
     max-width: 250px;
@@ -51,7 +55,7 @@
         font-weight: 600;
         background-color: b09f9f94;
     }
-    >input{
-
-    }
+}
+.chart-container{
+    z-index: 0;
 }

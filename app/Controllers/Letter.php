@@ -47,13 +47,13 @@ class Letter extends BaseController
             'token' => $token
         ];
         switch ($me['role']) {
-            case 'staff':
-                $surat = $this->disp_model
-                    ->join('letters', 'disposisi.sid=letters.id', 'right')
-                    ->where('uid', $me['uid'])
-                    ->where($tipe !== 'masuk' ? 'asal' : 'tujuan', '')
-                    ->findAll();
-                break; // Added 'break' statement
+            // case 'staff':
+            //     $surat = $this->disp_model
+            //         ->join('letters', 'disposisi.sid=letters.id', 'right')
+            //         ->where('uid', $me['uid'])
+            //         ->where($tipe !== 'masuk' ? 'asal' : 'tujuan', '')
+            //         ->findAll();
+            //     break; // Added 'break' statement
 
             case 'kepala':
                 if ($tipe === 'masuk')
@@ -85,6 +85,11 @@ class Letter extends BaseController
 
     public function newSurat(string $tipe = null)
     {
+        if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+            echo 'Upload failed with error code: ' . $_FILES['file']['error'];
+            exit();
+        }
+        
         $jenis = $tipe === 'masuk' ? 'asal' : 'tujuan';
         $rules = [
             'file' => 'uploaded[file]|mime_in[file,image/jpg,image/jpeg,image/png,application/pdf]',
@@ -111,9 +116,11 @@ class Letter extends BaseController
         $file = $this->request->getFile('file');
         $filename = $file->getRandomName();
         $tanggal = str_replace('/', '-', $this->request->getPost('tanggal'));
+        $created_at = str_replace('/', '-', $this->request->getPost('created_at'));
         $data = [
             'no_surat' => $this->request->getPost('no_surat'),
             'tanggal' => date('Y-m-d', strtotime((string)$tanggal)),
+            'created_at' => date('Y-m-d', strtotime((string)$created_at)),
             $jenis => $this->request->getPost($jenis),
             'perihal' => $this->request->getPost('perihal'),
         ];
@@ -139,6 +146,10 @@ class Letter extends BaseController
         if (!empty($this->request->getPost($jenis)) && $this->request->getPost($jenis) !== $surat[$jenis])
             $data[$jenis] = $this->request->getPost($jenis);
         if (!empty($this->request->getPost('tanggal'))) {
+            $tanggal = str_replace('/', '-', $this->request->getPost('tanggal'));
+            $data['tanggal'] = date('Y-m-d', strtotime((string)$tanggal));
+        }
+        if (!empty($this->request->getPost('created_at'))) {
             $tanggal = str_replace('/', '-', $this->request->getPost('tanggal'));
             $data['tanggal'] = date('Y-m-d', strtotime((string)$tanggal));
         }

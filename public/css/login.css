@@ -152,10 +152,21 @@ body {
 
 .social-login {	
 	position: absolute;
-	height: 140px;
-	width: 160px;
+	height: 100px;
+	width: 100px;
 	text-align: center;
-	bottom: 0px;
+	bottom: -30px;
+	right:126px;
+	color: #fff;
+}
+
+.social-login-name {	
+	position: absolute;
+	height: 100p;
+	width: 150px;
+	/* text-align: center; */
+	font-size:12px;
+	bottom: 3.4px;
 	right: 0px;
 	color: #fff;
 }

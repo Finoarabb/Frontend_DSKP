@@ -56,4 +56,7 @@ padding-inline: 0 !important;
 #rincianSurat > table td:nth-child(3) {
     text-align: left;
 }
+#tabelsaya_wrapper{
+    overflow-x: auto;
+}
 

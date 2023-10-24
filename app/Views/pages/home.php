@@ -56,7 +56,7 @@
     function utama(bulan) {
 
         $.ajax({
-            url: '<?= base_url() ?>/dashboard', // Replace with the actual URL
+            url: '<?= base_url(); ?>/dashboard', // Replace with the actual URL
             method: 'POST',
             dataType: 'json',
             data: {
@@ -112,6 +112,7 @@
 
         var options1 = {
             chart: {
+                // toolbar:{show:false},
                 type: 'line',
                 dropShadow: {
                     enabled: true,

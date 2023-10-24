@@ -33,6 +33,10 @@
                             <th scope="col" class="text-center"><?= $tipe === 'masuk' ? 'Tanggal Surat' : 'Tujuan Surat' ?></th>
                             <th scope="col" class="text-center">Perihal Surat</th>
                             <th scope="col" class="text-center">Tindakan</th>
+                            <!-- <th scope="col" class="text-center">Status</th> -->
+                            
+                            
+
                         </tr>
                     </thead>
                     <tbody>
@@ -51,15 +55,30 @@
                                     <td class="<?= $tipe === 'masuk' ? 'text-center' : ''; ?>"><?= $tipe === 'masuk' ? $srt['tanggal'] : $srt['tujuan']; ?></td>
                                     <td class="<?= empty($srt['perihal']) ? 'text-center' : '' ?>"><?= empty($srt['perihal']) ? '-' : $srt['perihal'] ?></td>
                                     <td>
-                                        <div class="d-flex <?= $tipe === 'masuk' && in_array($me['role'], ['supervisor', 'kepala']) ? 'justify-content-end' : 'justify-content-center' ?>">
+                                        <div class="d-flex <?= $tipe === 'masuk' && in_array($me['role'], ['supervisor', 'kepala', 'operator']) ? 'justify-content-end' : 'justify-content-center' ?>">
                                             <?php if ($tipe === 'masuk') : ?>
                                                 <?php if ($me['role'] === 'supervisor') : ?>
                                                     <?php if ($srt['status'] == 1) : ?>
-                                                        <button class="btn btn-secondary btn-danger mr-2 supervisor" data-toggle="1" value="<?= $srt['id'] ?>">Tersimpan</button>
+                                                        <button class="btn btn-secondary btn-danger mr-2 supervisor" data-toggle="1" value="<?= $srt['id'] ?>">Disimpan</button>
                                                     <?php elseif ($srt['status'] == 2) : ?>
                                                         <button class="btn btn-secondary btn-success mr-2 supervisor" data-toggle="2" value="<?= $srt['id'] ?>">Diteruskan</button>
-                                                    <?php elseif ($srt['status'] >= 3) : ?>
-                                                        <button class="btn btn-success mr-2 disabled">Sudah Didisposisikan</button>
+                                                    <?php elseif ($srt['status'] == 3) : ?>
+                                                        <button class="btn btn-success mr-2 disabled">Disimpan</button>
+                                                    <?php elseif ($srt['status'] == 5) : ?>
+                                                        <button class="btn btn-success mr-2 disabled">Didisposisikan</button>
+                                                    <?php else : ?>
+                                                        <button class="btn btn-info mr-2" id="approval" onclick="Approval(<?= $srt['id'] ?>)"> <i class="fas fa-fw fa-check"></i></button>
+                                                    <?php endif; ?>
+
+                                                <?php elseif ($me['role'] === 'operator') : ?>
+                                                    <?php if ($srt['status'] == 1) : ?>
+                                                        <button class="btn btn-secondary btn-danger mr-2" data-toggle="1" value="<?= $srt['id'] ?>">Disimpan</button>
+                                                    <?php elseif ($srt['status'] == 2) : ?>
+                                                        <button class="btn btn-secondary btn-success mr-2" data-toggle="2" value="<?= $srt['id'] ?>">Diteruskan</button>
+                                                    <?php elseif ($srt['status'] == 3) : ?>
+                                                        <button class="btn btn-success mr-2 disabled">Disimpan</button>
+                                                    <?php elseif ($srt['status'] == 5) : ?>
+                                                        <button class="btn btn-success mr-2 disabled">Didisposisikan</button>
                                                     <?php else : ?>
                                                         <button class="btn btn-info mr-2" id="approval" onclick="Approval(<?= $srt['id'] ?>)"> <i class="fas fa-fw fa-check"></i></button>
                                                     <?php endif; ?>
@@ -67,10 +86,10 @@
 
                                                 <?php elseif ($me['role'] === 'kepala') : ?>
                                                     <?php if ($srt['status'] == 3) : ?>
-                                                        <button class="btn btn-danger mr-2 btn-secondary kepala" data-toggle="3" value="<?= $srt['id'] ?>">Tersimpan</button>
+                                                        <button class="btn btn-danger mr-2 btn-secondary kepala" data-toggle="3" value="<?= $srt['id'] ?>">Disimpan</button>
                                                     <?php elseif ($srt['status'] == 5) : ?>
                                                         <button class="btn btn-success mr-2 disposeId" data-toggle="5" value="<?= $srt['id'] ?>">
-                                                            Diproses
+                                                            Didisposisikan
                                                             <span>
                                                                 <i class="fas fa-fw fa-check"></i>
                                                             </span>
@@ -85,7 +104,7 @@
                                             <a class="btn btn-primary" data-toggle="dropdown" id="action-dropdown"><i class="fa fa-fw fa-bars"></i></a>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a class="dropdown-item" href="viewSurat/<?= $srt['id']; ?>">Preview</i></a>
+                                                    <a class="dropdown-item" href="viewSurat/<?= $srt['id']; ?>">Lihat Surat</i></a>
                                                 </li>
                                                 <?php if (!empty($srt['lampiran'])) : ?>
                                                     <li>
@@ -94,10 +113,10 @@
                                                         </a>
                                                     </li>
                                                 <?php endif; ?>
-                                                <?php if (($me['role'] === 'staff' || $me['role'] === 'kepala') && $srt['status'] == '5') : ?>
+                                                <?php if (($me['role'] === 'staff' || $me['role'] === 'kepala'|| $me['role'] === 'supervisor') && $srt['status'] == '5') : ?>
                                                     <li>
                                                         <button class="dropdown-item viewDisposisi" value="<?= $srt['id']; ?>">
-                                                            Proses
+                                                            Lihat Disposisi
                                                         </button>
                                                     </li>
                                                 <?php endif; ?>
@@ -182,27 +201,44 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="input-group col">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="tanggal">Tanggal Surat</label>
+                        <div class="col">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text pr-4" for="tanggal">Tanggal Surat</label>
+                                </div>
+                                <input type="text" class="form-control bg-transparent" id="tanggal" name="tanggal" value="<?= date('d/m/Y') ?>" placeholder="Tanggal Surat" readonly>
+                                <div class="input-group-append ">
+                                    <button class="datepicker input-group-text bg-primary btn btn-primary calender" value="1">
+                                        <i class="fa fa-fw fa-calendar text-white"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <input type="text" class="form-control bg-transparent" id="tanggal" name="tanggal" value="<?= date('d/m/Y') ?>" placeholder="Tanggal Surat" readonly>
-                            <div class="input-group-append ">
-                                <button class="datepicker input-group-text bg-primary btn btn-primary calender">
-                                    <i class="fa fa-fw fa-calendar text-white"></i>
-                                </button>
+                            <?php if($tipe==='masuk'): ?>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="created_at">Tanggal Terima</label>
+                                </div>
+                                <input type="text" class="form-control bg-transparent" id="created_at" name="created_at" value="<?= date('d/m/Y') ?>" placeholder="Tanggal Terima" readonly>
+                                <div class="input-group-append ">
+                                    <button class="datepicker input-group-text bg-primary btn btn-primary calender" value="2">
+                                        <i class="fa fa-fw fa-calendar text-white"></i>
+                                    </button>
+                                </div>
                             </div>
+                            <?php endif;?>
                         </div>
-                        <div class="input-group col">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="file">File</label>
-                            </div>
-                            <input name="file" type="file" hidden id="uploadFile" accept=".pdf, .jpg, .jpeg, .png" />
-                            <input name="test" type="text" class="form-control bg-transparent" id="filename" readonly />
-                            <div class="input-group-append">
-                                <button class="input-group-text btn btn-primary bg-primary inputFile">
-                                    <i class="fa fa-fw fa-file text-white"></i>
-                                </button>
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="file">File</label>
+                                </div>
+                                <input name="file" type="file" hidden id="uploadFile" accept=".pdf, .jpg, .jpeg, .png" />
+                                <input name="test" type="text" class="form-control bg-transparent" id="filename" readonly />
+                                <div class="input-group-append">
+                                    <button class="input-group-text btn btn-primary bg-primary inputFile">
+                                        <i class="fa fa-fw fa-file text-white"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -233,11 +269,11 @@
                 srt = surat[i]
         });
         console.log(srt);
-        $('#tipe').val(srt.tujuan==''?srt.asal:srt.tujuan);
+        $('#tipe').val(srt.tujuan == '' ? srt.asal : srt.tujuan);
         $('#no_surat').val(srt.no_surat);
         $('#lampiran').val(srt.lampiran);
         $('#perihal').val(srt.perihal);
-        date =  new Date(srt.tanggal)
+        date = new Date(srt.tanggal)
         $('#tanggal').val(`${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`)
         $('#formSurat').attr('action', 'editLetter/' + sid);
     })
@@ -266,7 +302,7 @@
     $('.kepala').hover(function() {
         $(this).toggleClass('btn-danger', 'btn-secondary');
         $(this).html() == 'Batalkan <span> <i class="fa fa-fw fa-times"></i></span>' ?
-            $(this).html('Tersimpan') :
+            $(this).html('Disimpan') :
             $(this).html('Batalkan <span> <i class="fa fa-fw fa-times"></i></span>');
     }).click(function() {
         Swal.fire({
@@ -292,7 +328,10 @@
             autoclose: true,
 
         }).on('changeDate', function(selected) {
-            $('#tanggal').val(selected.format('dd/mm/yyyy'));
+            $(this).val() == 1 ?
+                $('#tanggal').val(selected.format('dd/mm/yyyy')) :
+                $('#created_at').val(selected.format('dd/mm/yyyy'));
+
         });
         $('.inputFile').click(function(e) {
             e.preventDefault();
@@ -354,7 +393,7 @@
             var jenis = $(this).data('toggle') == '1' ? 'btn-danger' : 'btn-success';
             $(this).toggleClass(jenis, 'btn-secondary');
             $(this).html() == 'Batalkan <span> <i class="fa fa-fw fa-times"></i></span>' ?
-                $(this).html($(this).data('toggle') == '1' ? 'Tersimpan' : 'Diteruskan') :
+                $(this).html($(this).data('toggle') == '1' ? 'Disimpan' : 'Diteruskan') :
                 $(this).html('Batalkan <span> <i class="fa fa-fw fa-times"></i></span>');
         }).click(function() {
             Swal.fire({
@@ -397,7 +436,7 @@
                 showCancelButton: true,
                 showDenyButton: true,
                 denyButtonText: 'Simpan',
-                cancelButtonText: 'Cancel',
+                cancelButtonText: 'Batal',
                 confirmButtonText: 'Teruskan'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -436,7 +475,7 @@
             const selectOptions = user.map(u => '<option value="' + u.id + '">' + u.nama + '</option>').join(' ')
 
             Swal.fire({
-                title: 'Disposisikan Surat Kepada :',
+                title: 'Disposisikan Surat',
                 icon: 'warning',
                 html: `<form action="disposeLetter" method="post" id="disposeForm">
                         <input value="${id}" name="sid" hidden>
@@ -450,7 +489,7 @@
                 showCancelButton: true,
                 showDenyButton: true,
                 denyButtonText: disposed ? 'Batalkan' : 'Simpan',
-                cancelButtonText: 'Tidak',
+                cancelButtonText: 'Batal',
                 confirmButtonText: 'Disposisikan'
             }).then((result) => {
                 if (result.isConfirmed) {

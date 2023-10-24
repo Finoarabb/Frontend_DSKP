@@ -2,12 +2,14 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home">
-                <div class="sidebar-brand-icon">
+            <a class="sidebar-brand align-items-center justify-content-center" href="home">
+                <!-- <div class="sidebar-brand-icon"> -->
                     <!-- <i class="fas fa-bullhorn"></i> -->
-                    <img class="img-profile rounded-circle" width="50px" src="img/logo_bps.png">
+                    <!-- <img class="img-profile rounded-circle" width="50px" src="img/logo_bps.png">
+                </div> -->
+                <div class="sidebar-brand-text mx-3">SIAGENPOS
+                    <P style="font-size: 6px;">SISTEM INFORMASI AGENDA DAN DISPOSISI SURAT</P>
                 </div>
-                <div class="sidebar-brand-text mx-3">DSKP</div>
             </a>
 
             <!-- Divider -->
@@ -17,7 +19,7 @@
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <div class="sidebar-heading"><img class="img-profile rounded-circle" width="20px" src="img/logo_bps.png">
                 BPS Kabupaten Pasuruan
             </div>
 
@@ -35,14 +37,13 @@
                     <span>Surat Masuk</span>
                 </a>
             </li>
-            <?php if($me['role']!=='staff'):?>
+            
             <li class="nav-item <?= ($currentURI == 'srtkeluar') ? 'active' : ''; ?>">
                 <a class="nav-link" href="srtkeluar">
                     <i class="fas fa-fw fa-envelope-open"></i>
                     <span>Surat Keluar</span>
                 </a>
             </li>
-            <?php endif;?>
             <?php if($me['role']==='admin'):?>
             <li class="nav-item <?= ($currentURI == 'users') ? 'active' : ''; ?>">
                 <a class="nav-link" href="users">
@@ -55,7 +56,7 @@
             
             <!-- Divider -->
             <hr class="sidebar-divider">
-            <?php if(in_array($me['role'],['admin','supervisor','operator'])):?>
+            <?php if(in_array($me['role'],['admin','supervisor','operator','staff'])):?>
             <li class="nav-item <?= ($currentURI == 'dispLetter') ? 'active' : ''; ?>">
                 <a class="nav-link" href="dispLetter">
                     <i class="fas fa-fw fa-paper-plane"></i>

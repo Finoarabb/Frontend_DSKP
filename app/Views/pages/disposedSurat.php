@@ -39,11 +39,11 @@
                                     <a class="btn btn-primary" data-toggle="dropdown" id="action-dropdown"><i class="fa fa-fw fa-bars"></i></a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" href="viewSurat/<?= $srt['id']; ?>">Preview</i></a>
+                                            <a class="dropdown-item" href="viewSurat/<?= $srt['id']; ?>">Lihat Surat</i></a>
                                         </li>
                                             <li>
                                                 <button class="dropdown-item viewDisposisi" value="<?= $srt['id']; ?>" data-toggle="modal" data-target="#dispmodal">
-                                                    Proses
+                                                    Lihat Disposisi
                                                 </button>
                                             </li>
                                             <?php if(!empty($srt['lampiran'])): ?>
