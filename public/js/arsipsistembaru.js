@@ -1,6 +1,20 @@
 //
 var tabelsurat;
 var fullData;
+var months = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
 $(document).ready(function () {
   tabelsurat = $("#tabelsaya").DataTable({
     order:[[0,'desc']],
@@ -63,25 +77,19 @@ $(document).ready(function () {
       search: "Cari:",
     },
   });
+  $.fn.dataTable.ext.search.push(function(settings, data, dataIndex){
+    if(settings.nTable.id!=='tabelsaya'){return true;}
+    let monthPicker = $('#monthPicker').val();
+    if(monthPicker===''){return true;}
+    let temp = monthPicker.split('/');
+    let bulan = String(months.indexOf(temp[0]) + 1 + "/" + temp[1]);
+    let date = new Date(data[0]);
+    const formattedDate = `${date.getMonth()+1}/${date.getFullYear()}`
+    if(formattedDate === bulan) {return true;}
+    return false;
+  })
 });
 
-function filterBulan(tipe, bulan) {
-  if(bulan===''){$('table tbody tr').show(); return}
-  // var tr = tabelsurat.rows().nodes();
-  // var filteredData = tabelsurat.rows().nodes().each(function(){
-  //   const date = new Date($(this).children('td').eq(0).text());
-    
-    //   // }
-    // });
-    fullData.map(function(item,index){
-      var date = new Date(item[0]);
-      const formattedDate = `${date.getMonth()+1}/${date.getFullYear()}`
-      if(formattedDate === bulan)
-      $('table tbody tr').eq(index).show()
-      else 
-      $('table tbody tr').eq(index).hide()
-  })
-}
 
 $(document).ready(function () {
   $("#tabelsaya_wrapper .top").addClass("form-inline mb-2");
@@ -104,26 +112,13 @@ $(document).ready(function () {
   $("#monthPicker").change(function () {
     if ($(this).val() != "") $(".clear-filter").removeClass("d-none");
     else $(".clear-filter").addClass("d-none");
+    tabelsurat.draw();
   });
   $(".clear-filter").click(function () {
     $("#monthPicker").val("");
-    filterBulan(tipe, "");
-    $("#monthPicker").trigger("change");
+    $("#monthPicker").trigger('change');
   });
-  var months = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
+  
   $("#monthPicker").monthpicker({
     target: "#monthPicker",
     dateFormat: "MM/yy", // Use four "m"s for full month name
@@ -142,12 +137,6 @@ $(document).ready(function () {
       "Okt",
       "Nov",
       "Des",
-    ],
-    onSelect: function (month) {
-      let temp = month.split("/");
-      let bulan = String(months.indexOf(temp[0]) + 1 + "/" + temp[1]);
-      $("#monthPicker").trigger("change");
-      filterBulan(tipe, bulan);
-    },
+    ],    
   });
 });

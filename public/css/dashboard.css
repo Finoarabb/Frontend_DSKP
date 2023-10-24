@@ -1,9 +1,9 @@
 .dashboard{
-    width: 50%;
+    width: 90%;
     font-family: "Inter",sans-serif;
     font-weight: 450;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: stretch;
     --primary:#00a9ffa8;
     --secondary:#84C318;    
@@ -34,15 +34,12 @@
 } 
 
 .utama1{
-    width: 200px;
     background-color: var(--primary);
 }
 .utama2{
-    width: 200px;
     background-color: var(--secondary);
 }
 .utama3{
-    width: 200px;
     background-color: var(--third);
 }
 .filter{

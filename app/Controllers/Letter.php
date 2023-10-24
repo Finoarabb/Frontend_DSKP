@@ -47,13 +47,16 @@ class Letter extends BaseController
             'token' => $token
         ];
         switch ($me['role']) {
-            // case 'staff':
-            //     $surat = $this->disp_model
-            //         ->join('letters', 'disposisi.sid=letters.id', 'right')
-            //         ->where('uid', $me['uid'])
-            //         ->where($tipe !== 'masuk' ? 'asal' : 'tujuan', '')
-            //         ->findAll();
-            //     break; // Added 'break' statement
+            case 'staff':                 
+                    if ($tipe === 'masuk')
+                        $surat = $this->letter_model
+                            ->where('status NOT', [2,3])
+                            ->where('tujuan', '')
+                            ->findAll();
+                    else $surat = $this->letter_model
+                        ->where($tipe !== 'masuk' ? 'asal' : 'tujuan', '')
+                        ->findAll();
+                break; // Added 'break' statement
 
             case 'kepala':
                 if ($tipe === 'masuk')

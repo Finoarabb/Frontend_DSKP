@@ -33,9 +33,10 @@
                             <th scope="col" class="text-center"><?= $tipe === 'masuk' ? 'Tanggal Surat' : 'Tujuan Surat' ?></th>
                             <th scope="col" class="text-center">Perihal Surat</th>
                             <th scope="col" class="text-center">Tindakan</th>
+                            <?= $me['role'] === 'operator' ? '<th scope="col" class="text-center">Status</th>' : ''; ?>
                             <!-- <th scope="col" class="text-center">Status</th> -->
-                            
-                            
+
+
 
                         </tr>
                     </thead>
@@ -55,7 +56,7 @@
                                     <td class="<?= $tipe === 'masuk' ? 'text-center' : ''; ?>"><?= $tipe === 'masuk' ? $srt['tanggal'] : $srt['tujuan']; ?></td>
                                     <td class="<?= empty($srt['perihal']) ? 'text-center' : '' ?>"><?= empty($srt['perihal']) ? '-' : $srt['perihal'] ?></td>
                                     <td>
-                                        <div class="d-flex <?= $tipe === 'masuk' && in_array($me['role'], ['supervisor', 'kepala', 'operator']) ? 'justify-content-end' : 'justify-content-center' ?>">
+                                        <div class="d-flex <?= $tipe === 'masuk' && in_array($me['role'], ['supervisor', 'kepala']) ? 'justify-content-end' : 'justify-content-center' ?>">
                                             <?php if ($tipe === 'masuk') : ?>
                                                 <?php if ($me['role'] === 'supervisor') : ?>
                                                     <?php if ($srt['status'] == 1) : ?>
@@ -70,18 +71,7 @@
                                                         <button class="btn btn-info mr-2" id="approval" onclick="Approval(<?= $srt['id'] ?>)"> <i class="fas fa-fw fa-check"></i></button>
                                                     <?php endif; ?>
 
-                                                <?php elseif ($me['role'] === 'operator') : ?>
-                                                    <?php if ($srt['status'] == 1) : ?>
-                                                        <button class="btn btn-secondary btn-danger mr-2" data-toggle="1" value="<?= $srt['id'] ?>">Disimpan</button>
-                                                    <?php elseif ($srt['status'] == 2) : ?>
-                                                        <button class="btn btn-secondary btn-success mr-2" data-toggle="2" value="<?= $srt['id'] ?>">Diteruskan</button>
-                                                    <?php elseif ($srt['status'] == 3) : ?>
-                                                        <button class="btn btn-success mr-2 disabled">Disimpan</button>
-                                                    <?php elseif ($srt['status'] == 5) : ?>
-                                                        <button class="btn btn-success mr-2 disabled">Didisposisikan</button>
-                                                    <?php else : ?>
-                                                        <button class="btn btn-info mr-2" id="approval" onclick="Approval(<?= $srt['id'] ?>)"> <i class="fas fa-fw fa-check"></i></button>
-                                                    <?php endif; ?>
+
 
 
                                                 <?php elseif ($me['role'] === 'kepala') : ?>
@@ -113,7 +103,7 @@
                                                         </a>
                                                     </li>
                                                 <?php endif; ?>
-                                                <?php if (($me['role'] === 'staff' || $me['role'] === 'kepala'|| $me['role'] === 'supervisor') && $srt['status'] == '5') : ?>
+                                                <?php if (($me['role'] === 'staff' || $me['role'] === 'kepala' || $me['role'] === 'supervisor') && $srt['status'] == '5') : ?>
                                                     <li>
                                                         <button class="dropdown-item viewDisposisi" value="<?= $srt['id']; ?>">
                                                             Lihat Disposisi
@@ -136,6 +126,25 @@
 
                                         </div>
                                     </td>
+                                    <?php if (in_array($me['role'], ['operator', 'admin']) && $tipe === 'masuk') : ?>
+                                        <td>
+                                            <div class="d-flex justify-content-center">
+                                                <?php
+                                                switch ($srt['status']) {
+                                                    case 0:
+                                                        echo '<button class="btn btn-info disabled"><i class="fa fa-fw fa-check"></i></button>';
+                                                        break;
+                                                    case 1:
+                                                        echo '<button class="btn btn-success disabled w-100">Diteruskan</button>';
+                                                        break;
+                                                    default:
+                                                        echo '<button class="btn btn-danger disabled w-100">Didisposisikan</button>';
+                                                        break;
+                                                }
+                                                ?>
+                                            </div>
+                                        </td>
+                                    <?php endif; ?>
                                 </tr>
                         <?php endforeach;
                         endif; ?>
@@ -213,19 +222,19 @@
                                     </button>
                                 </div>
                             </div>
-                            <?php if($tipe==='masuk'): ?>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="created_at">Tanggal Terima</label>
+                            <?php if ($tipe === 'masuk') : ?>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="created_at">Tanggal Terima</label>
+                                    </div>
+                                    <input type="text" class="form-control bg-transparent" id="created_at" name="created_at" value="<?= date('d/m/Y') ?>" placeholder="Tanggal Terima" readonly>
+                                    <div class="input-group-append ">
+                                        <button class="datepicker input-group-text bg-primary btn btn-primary calender" value="2">
+                                            <i class="fa fa-fw fa-calendar text-white"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <input type="text" class="form-control bg-transparent" id="created_at" name="created_at" value="<?= date('d/m/Y') ?>" placeholder="Tanggal Terima" readonly>
-                                <div class="input-group-append ">
-                                    <button class="datepicker input-group-text bg-primary btn btn-primary calender" value="2">
-                                        <i class="fa fa-fw fa-calendar text-white"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <?php endif;?>
+                            <?php endif; ?>
                         </div>
                         <div class="col">
                             <div class="input-group">

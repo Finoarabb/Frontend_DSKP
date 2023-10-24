@@ -20,9 +20,9 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="dashboard">
+            <div class="row dashboard">
 
-                <div class="utama1">
+                <div class="col-sm-3 utama1">
                     <p>
                         Surat Masuk
                     </p>
@@ -30,11 +30,11 @@
                 </div>
 
 
-                <div class="utama2">
+                <div class="col-sm-3 utama2">
                     <p>Surat Terdisposisi </p>
                     <span class="nilai" id="stbln"></span>
                 </div>
-                <div class="utama3">
+                <div class="col-sm-3 utama3">
                     <p>Surat Keluar </p>
                     <span class="nilai" id="skbln"></span>
                 </div>
