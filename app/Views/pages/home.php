@@ -56,7 +56,7 @@
     function utama(bulan) {
 
         $.ajax({
-            url: '<?= base_url(); ?>/dashboard', // Replace with the actual URL
+            url: baseurl+'/dashboard', // Replace with the actual URL
             method: 'POST',
             dataType: 'json',
             data: {
