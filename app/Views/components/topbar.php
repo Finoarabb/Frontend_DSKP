@@ -67,7 +67,7 @@
                     }
 
                     $.post({
-                        url: base_url + '/gantiPassword/' + <?= $me['uid']; ?>,
+                        url: baseurl + '/gantiPassword/' + <?= $me['uid']; ?>,
                         data: {
                             password: password
                         },

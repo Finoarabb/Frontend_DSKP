@@ -264,7 +264,6 @@
 
 <script>
     var tipe = '<?= $tipe; ?>';
-    baseurl = "<?= base_url() ?>";
     const surat = <?= json_encode($surat); ?>;
     var disp;
     $('.edit').click(function(e) {
@@ -469,7 +468,7 @@
             var disposed = $(this).attr('data-toggle') == '5'
             await $.ajax({
                 method: 'GET',
-                url: '<?= base_url() ?>/disposableUser/' + id,
+                url: baseurl+'/disposableUser/' + id,
                 async: false,
                 headers: {
                     'Authorization': 'Bearer <?= $token; ?>'
